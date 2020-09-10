@@ -1,13 +1,11 @@
-package com.lovelace_scd.timed
+package com.lovelace_scd.timed.Controller
 
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
+import com.lovelace_scd.timed.R
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "ActivityLifeCycle"
