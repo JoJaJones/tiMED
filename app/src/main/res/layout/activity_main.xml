@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
     tools:context=".MainActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -23,6 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
+        android:fontFamily="@font/architects_daughter"
         android:text="tiMED"
         android:textColor="@color/cardview_light_background"
         android:textSize="30sp"
@@ -58,7 +60,7 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/footer"
-        android:layout_width="409dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
@@ -74,6 +76,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:background="@color/colorAccent"
+        android:fontFamily="@font/architects_daughter"
         android:text="Add Timer"
         android:textColor="@color/cardview_light_background"
         app:layout_constraintBottom_toBottomOf="@+id/footer"
