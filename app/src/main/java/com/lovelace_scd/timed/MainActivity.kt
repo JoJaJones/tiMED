@@ -1,6 +1,7 @@
 package com.lovelace_scd.timed
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -9,16 +10,18 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
+    private val TAG = "ActivityLifeCycle"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
-        val fab = findViewById<FloatingActionButton>(R.id.fab)
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }
+//        val toolbar = findViewById<Toolbar>(R.id.header)
+//        setSupportActionBar(toolbar)
+//        val fab = findViewById<FloatingActionButton>(R.id.fab)
+//        fab.setOnClickListener { view ->
+//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                    .setAction("Action", null).show()
+//        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -35,5 +38,35 @@ class MainActivity : AppCompatActivity() {
         return if (id == R.id.action_settings) {
             true
         } else super.onOptionsItemSelected(item)
+    }
+
+    override fun onStart() {
+        Log.d(TAG, "onStart called")
+        super.onStart()
+    }
+
+    override fun onResume() {
+        Log.d(TAG, "onResume called")
+        super.onResume()
+    }
+
+    override fun onRestart() {
+        Log.d(TAG, "onRestart called")
+        super.onRestart()
+    }
+
+    override fun onPause() {
+        Log.d(TAG, "onPause called")
+        super.onPause()
+    }
+
+    override fun onStop() {
+        Log.d(TAG, "onStop called")
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        Log.d(TAG, "onDestroy caled")
+        super.onDestroy()
     }
 }
