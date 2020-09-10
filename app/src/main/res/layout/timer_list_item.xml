@@ -10,32 +10,28 @@
         android:id="@+id/medName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
         android:fontFamily="@font/architects_daughter"
         android:text="Med Name"
-        android:textColor="@color/cardview_light_background"
+        android:textColor="@color/lightColor"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/timer"
+        android:id="@+id/medTimer"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="6dp"
         android:fontFamily="monospace"
         android:text="127:23:59:23"
-        android:textColor="@color/cardview_light_background"
+        android:textColor="@color/lightColor"
         android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/delButton"
         app:layout_constraintTop_toBottomOf="@+id/divider" />
 
@@ -43,24 +39,106 @@
         android:id="@+id/delButton"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:layout_marginBottom="1dp"
         android:background="@android:color/transparent"
-        app:layout_constraintBottom_toBottomOf="@+id/timer"
+        app:layout_constraintBottom_toBottomOf="@+id/medTimer"
         app:layout_constraintDimensionRatio="h,1:1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/timer"
+        app:layout_constraintTop_toTopOf="@+id/medTimer"
         app:srcCompat="@android:drawable/ic_delete" />
 
     <ImageView
         android:id="@+id/divider"
         android:layout_width="0dp"
         android:layout_height="1px"
-        android:background="@color/cardview_light_background"
+        android:background="@color/lightColor"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/divider_horizontal_bright" />
+
+    <ImageView
+        android:id="@+id/divider2"
+        android:layout_width="0dp"
+        android:layout_height="1px"
+        android:background="@color/lightColor"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@android:drawable/divider_horizontal_bright" />
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/refillsRemainingField"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@color/lightColor"
+        android:gravity="center"
+        android:text="0"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="@+id/delayBtn"
+        app:layout_constraintDimensionRatio="h,1:1"
+        app:layout_constraintEnd_toStartOf="@+id/delayBtn"
+        app:layout_constraintStart_toEndOf="@+id/refillBtn"
+        app:layout_constraintTop_toTopOf="@+id/delayBtn" />
+
+    <ImageButton
+        android:id="@+id/skipBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toTopOf="@+id/divider2"
+        app:layout_constraintDimensionRatio="w,1:1"
+        app:layout_constraintEnd_toStartOf="@+id/takeBtn"
+        app:layout_constraintTop_toBottomOf="@+id/delButton"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@android:drawable/ic_media_next" />
+
+    <Button
+        android:id="@+id/refillBtn"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:background="@color/acceptColor"
+        android:text="Refill"
+        android:textColor="@color/lightColor"
+        app:layout_constraintBottom_toBottomOf="@+id/delayBtn"
+        app:layout_constraintStart_toStartOf="@+id/medTimer"
+        app:layout_constraintTop_toTopOf="@+id/delayBtn" />
+
+    <ImageButton
+        android:id="@+id/delayBtn"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="@+id/skipBtn"
+        app:layout_constraintDimensionRatio="h,1:1"
+        app:layout_constraintEnd_toStartOf="@+id/skipBtn"
+        app:layout_constraintTop_toTopOf="@+id/skipBtn"
+        app:srcCompat="@android:drawable/ic_media_ff" />
+
+    <ImageButton
+        android:id="@+id/takeBtn"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="@+id/delayBtn"
+        app:layout_constraintDimensionRatio="h,1:1"
+        app:layout_constraintEnd_toEndOf="@+id/delButton"
+        app:layout_constraintTop_toTopOf="@+id/delayBtn"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@android:drawable/ic_input_add" />
 </androidx.constraintlayout.widget.ConstraintLayout>

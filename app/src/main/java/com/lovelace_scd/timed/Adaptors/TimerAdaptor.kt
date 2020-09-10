@@ -10,11 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lovelace_scd.timed.R
 import com.lovelace_scd.timed.model.Timer
 
-class TimerAdaptor(val context: Context, val timers: List<Timer>,
-                   val itemClick: (Timer) -> Unit) : RecyclerView.Adapter<TimerAdaptor.Holder>() {
+class TimerAdaptor(val context: Context, val timers: List<Timer>) : RecyclerView.Adapter<TimerAdaptor.Holder>() {
     override fun onCreateViewHolder(parent: ViewGroup, position: Int): Holder {
         val view = LayoutInflater.from(context).inflate(R.layout.timer_list_item, parent, false)
-        return Holder(view, itemClick)
+        return Holder(view)
     }
 
     override fun getItemCount(): Int {
@@ -25,7 +24,7 @@ class TimerAdaptor(val context: Context, val timers: List<Timer>,
         holder.bindTimer(timers[position], context)
     }
 
-    inner class Holder(itemView: View, val itemClick: (Timer) -> Unit) : RecyclerView.ViewHolder(itemView){
+    inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val productImage: ImageView? = itemView.findViewById<ImageView>(R.id.productImage)
         val productName: TextView? = itemView.findViewById<TextView>(R.id.productDescription)
         val productPrice: TextView? = itemView.findViewById<TextView>(R.id.priceText)
@@ -34,7 +33,7 @@ class TimerAdaptor(val context: Context, val timers: List<Timer>,
             productImage?.setImageResource(context.resources.getIdentifier(product.image, "drawable", context.packageName)) //converts string resource name to the appropriate resource file
             productName?.text = product.title
             productPrice?.text = product.price
-            itemView.setOnClickListener { itemClick(product) }
+//            itemView.setOnClickListener { itemClick(product) }
         }
     }
 }
