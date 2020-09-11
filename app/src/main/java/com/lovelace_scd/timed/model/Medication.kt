@@ -1,22 +1,10 @@
-package com.lovelace_scd.timed.model
+package com.lovelace_scd.timed.Model
 
-class Medication(var name: String, var rxFullSize: Double, var amountRemaining: Double,
-                      var numRefillsRemaining: Int, var isRefillable: Boolean, var dosesPerTimePeriod: Long,
-                      var daysPerTimePeriod: Long, var doseSize: Double, var takeWithFood: Boolean, var doseUnit: String ) {
-
-    private var footTaken : Boolean = false
-
-    fun foodTaken(){
-        footTaken = true
-    }
+open class Medication(var name: String, var rxFullSize: Double, var amountRemaining: Double,
+                      var numRefillsRemaining: Int, var isRefillable: Boolean, var dosesPerTimePeriod: Int,
+                      var daysPerTimePeriod: Int, var doseSize: Double, var takeWithFood: Boolean, var doseUnit: String ) {
 
     fun takeMed(){
-        if(amountRemaining == 0.0){
-            throw error("You have no medication remaining")
-        }
-        else if (takeWithFood && !footTaken){
-            throw error("You need to take food in before you take this medication")
-        }
         amountRemaining -= doseSize
     }
 

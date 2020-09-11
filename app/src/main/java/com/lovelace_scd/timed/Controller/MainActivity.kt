@@ -6,10 +6,11 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.lovelace_scd.timed.R
+import com.lovelace_scd.timed.model.Timer
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "ActivityLifeCycle"
-
+    private val timers = HashMap<String, Timer>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
