@@ -1,0 +1,20 @@
+{
+"medications": [
+    {
+      "medication_name": "someMed",
+      "doses_per_day": 2,
+      "dose_size": 3,
+      "dose_unit": "pill",
+      "take_with_food": true,
+      "next_dose": "08:00:00"
+    },
+    {
+      "medication_name": "anotherMed",
+      "doses_per_day": 1,
+      "dose_size": 2,
+      "dose_unit": "pill",
+      "take_with_food": false,
+      "next_dose": "08:00:00"
+    }
+  ]
+}
