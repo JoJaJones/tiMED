@@ -4,6 +4,7 @@ open class Medication(var name: String, var rxFullSize: Double, var amountRemain
                       var numRefillsRemaining: Int, var isRefillable: Boolean, var dosesPerTimePeriod: Int,
                       var daysPerTimePeriod: Int, var doseSize: Double, var takeWithFood: Boolean, var doseUnit: String ) {
 
+
     fun takeMed(){
         amountRemaining -= doseSize
     }
@@ -18,5 +19,22 @@ open class Medication(var name: String, var rxFullSize: Double, var amountRemain
 
     fun calcNextDostTime(prevDoseTime: Double): Double {
         return prevDoseTime + (daysPerTimePeriod * 24) / dosesPerTimePeriod
+    }
+
+    fun toMap() : MutableMap<String, Any> {
+        var map = mutableMapOf<String, Any>();
+
+        map["medicationName"] = name;
+        map["rxFullSize"] = rxFullSize;
+        map["amountRemaining"] = amountRemaining;
+        map["numRefillsRemaining"] = numRefillsRemaining;
+        map["isRefillable"] = isRefillable;
+        map["dosesPerTimePeriod"] = dosesPerTimePeriod;
+        map["daysPerTimePeriod"] = daysPerTimePeriod;
+        map["doseSize"] = doseSize;
+        map["takeWithFood"] = takeWithFood;
+        map["doseUnit"] = doseUnit;
+
+        return map;
     }
 }

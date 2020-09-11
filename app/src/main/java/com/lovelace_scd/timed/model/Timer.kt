@@ -18,22 +18,25 @@ class Timer : CountDownTimer {
 
 
     private var millisecondsToNextDose: Long;
-    private var medication : Medication;
+    private var medication: Medication;
 
     // Keep millisecondsNextDoseAdjusted separate from millisecondsToNextDose to allow
     //  user option to continue to adjust all future dose times. For example, if user selects from
     //  UI "Delay next dose 2 hours", when user eventually marks dose as taken, we can easily allow
     //  user to schedule all next doses for 2 hours later.
     private var millisecondsNextDoseAdjusted: Long;
-    private var skipNextDose: Boolean = false;
-    private var nextDoseReady: Boolean = false;
+    private var skipNextDose: Boolean;
+    private var nextDoseReady: Boolean;
 
-    constructor(medication: Medication) :
-            super(medication.dosesPerTimePeriod / medication.daysPerTimePeriod * millisecondsPerDay as Long,
-            millisecondsPerSecond as Long) {
+    constructor(medication: Medication, skipNextDose: Boolean = false, nextDoseReady: Boolean = false) :
+            super((medication.dosesPerTimePeriod / medication.daysPerTimePeriod * millisecondsPerDay).toLong(),
+                    millisecondsPerSecond.toLong()) {
 
         this.medication = medication;
-        millisecondsToNextDose = medication.dosesPerTimePeriod / medication.daysPerTimePeriod * millisecondsPerDay as Long;
+        this.skipNextDose = skipNextDose;
+        this.nextDoseReady = nextDoseReady;
+
+        millisecondsToNextDose = (medication.dosesPerTimePeriod / medication.daysPerTimePeriod * millisecondsPerDay).toLong();
         millisecondsNextDoseAdjusted = 0;
     }
 
@@ -71,4 +74,15 @@ class Timer : CountDownTimer {
         this.start();
 
     }
+
+    fun toMap(): Map<String, Any> {
+        var map = medication.toMap();
+        map["skipNextDose"] = skipNextDose;
+        map["nextDoseReady"] = nextDoseReady;
+        map["millisecondsToNextDose"] = millisecondsToNextDose;
+        map["millisecondsNextDoseAdjusted"] = millisecondsNextDoseAdjusted;
+
+        return map;
+    }
+    
 }

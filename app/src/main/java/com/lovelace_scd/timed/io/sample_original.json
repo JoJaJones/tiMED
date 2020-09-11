@@ -1,0 +1,34 @@
+{
+  "timers": [
+    {
+      "medicationName": "someMed",
+      "dosesPerTimePeriod": 2,
+      "daysPerTimePeriod": 3,
+      "doseSize": 3.0,
+      "doseUnit": "pill",
+      "takeWithFood": true,
+      "nextDose": 1599789560
+      "rxFullSize": 30.0
+      "amountRemaining": 24.0,
+      "numRefillsRemaining": 2,
+      "isRefillable": true,
+      "skipNextDose": false,
+      "nextDoseReady": true
+    },
+    {
+      "medicationName": "someMed",
+      "dosesPerTimePeriod": 2,
+      "daysPerTimePeriod": 3,
+      "doseSize": 3.0,
+      "doseUnit": "pill",
+      "takeWithFood": true,
+      "nextDose": 1599789560
+      "rxFullSize": 30.0
+      "amountRemaining": 24.0,
+      "numRefillsRemaining": 2,
+      "isRefillable": true,
+      "skipNextDose": false,
+      "nextDoseReady": false
+    }
+  ]
+}
