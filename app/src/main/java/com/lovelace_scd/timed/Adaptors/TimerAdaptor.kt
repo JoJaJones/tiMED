@@ -21,19 +21,19 @@ class TimerAdaptor(val context: Context, val timers: List<Timer>) : RecyclerView
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        holder.bindTimer(timers[position], context)
+//        holder.bindTimer(timers[position], context)
     }
 
     inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView){
-        val productImage: ImageView? = itemView.findViewById<ImageView>(R.id.productImage)
-        val productName: TextView? = itemView.findViewById<TextView>(R.id.productDescription)
-        val productPrice: TextView? = itemView.findViewById<TextView>(R.id.priceText)
-
-        fun bindTimer(timer: Timer, context: Context){
-            productImage?.setImageResource(context.resources.getIdentifier(product.image, "drawable", context.packageName)) //converts string resource name to the appropriate resource file
-            productName?.text = product.title
-            productPrice?.text = product.price
-//            itemView.setOnClickListener { itemClick(product) }
-        }
+//        val productImage: ImageView? = itemView.findViewById<ImageView>(R.id.productImage)
+//        val productName: TextView? = itemView.findViewById<TextView>(R.id.productDescription)
+//        val productPrice: TextView? = itemView.findViewById<TextView>(R.id.priceText)
+//
+//        fun bindTimer(timer: Timer, context: Context){
+//            productImage?.setImageResource(context.resources.getIdentifier(product.image, "drawable", context.packageName)) //converts string resource name to the appropriate resource file
+//            productName?.text = product.title
+//            productPrice?.text = product.price
+////            itemView.setOnClickListener { itemClick(product) }
+//        }
     }
 }

@@ -7,6 +7,7 @@
 package com.lovelace_scd.timed.model
 
 import android.os.CountDownTimer
+import com.lovelace_scd.timed.Model.Medication
 
 
 const val millisecondsPerDay = 24 * 60 * 60 * 1000;
@@ -28,11 +29,11 @@ class Timer : CountDownTimer {
     private var nextDoseReady: Boolean = false;
 
     constructor(medication: Medication) :
-            super(medication.dosesPerTimePeriod / medication.daysPerTimePeriod * millisecondsPerDay,
+            super(medication.dosesPerTimePeriod / medication.daysPerTimePeriod * millisecondsPerDay as Long,
             millisecondsPerSecond as Long) {
 
         this.medication = medication;
-        millisecondsToNextDose = medication.dosesPerTimePeriod / medication.daysPerTimePeriod * millisecondsPerDay;
+        millisecondsToNextDose = medication.dosesPerTimePeriod / medication.daysPerTimePeriod * millisecondsPerDay as Long;
         millisecondsNextDoseAdjusted = 0;
     }
 

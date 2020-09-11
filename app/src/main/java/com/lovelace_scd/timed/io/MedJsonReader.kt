@@ -1,7 +1,7 @@
 package com.lovelace_scd.timed.io
 
 import com.beust.klaxon.Klaxon
-import com.lovelace_scd.timed.model.Medication
+import com.lovelace_scd.timed.Model.Medication
 import com.lovelace_scd.timed.model.Timer
 
 
@@ -65,8 +65,8 @@ class MedJsonReader {
 // Short lived class for reading and writing Medication/Timer instances to json.
 class MedJsonTransfer(
         val medicationName: String,
-        val dosesPerTimePeriod: Long,
-        val daysPerTimePeriod: Long,
+        val dosesPerTimePeriod: Int,
+        val daysPerTimePeriod: Int,
         val doseSize: Double,
         val doseUnit: String,
         val takeWithFood: Boolean,
