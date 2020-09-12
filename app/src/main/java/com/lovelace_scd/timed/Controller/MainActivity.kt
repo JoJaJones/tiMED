@@ -5,11 +5,15 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.lovelace_scd.timed.Adaptors.TimerAdaptor
 import com.lovelace_scd.timed.R
 import com.lovelace_scd.timed.model.Timer
+import com.lovelace_scd.timed.service.TestTimerObjects
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,19 +30,17 @@ class MainActivity : AppCompatActivity() {
 //            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                    .setAction("Action", null).show()
 //        }
-        if (timers.size > 0) {
-            adapter = TimerAdaptor(this, timers.values.toList())
-
+        if (timers.size > 0 || TestTimerObjects.testTimers.size > 0) {
+            adapter = TimerAdaptor(this, TestTimerObjects.testTimers)
+            val timerListView = findViewById<RecyclerView>(R.id.timerListView)
             timerListView.adapter = this.adapter
-            var spanCount = 2
-            if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                spanCount = 3
-            } else {
-                spanCount = 2
-            }
 
-            productListView.layoutManager = GridLayoutManager(this, spanCount)
+            timerListView.layoutManager = LinearLayoutManager(this)
         }
+    }
+
+    fun deleteMed(view: View){
+        Log.d("View: ", view.toString())
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
