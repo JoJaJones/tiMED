@@ -78,6 +78,7 @@
         android:layout_marginBottom="8dp"
         android:background="@color/colorAccent"
         android:fontFamily="@font/architects_daughter"
+        android:onClick="addMed"
         android:text="Add Timer"
         android:textColor="@color/lightColor"
         app:layout_constraintBottom_toBottomOf="@+id/footer"

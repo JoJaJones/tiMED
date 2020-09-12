@@ -13,6 +13,8 @@ import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Klaxon
 import com.beust.klaxon.json
 import com.lovelace_scd.timed.Model.Medication
+
+
 import com.lovelace_scd.timed.model.Timer
 import java.io.File
 
@@ -73,19 +75,3 @@ class MedJsonReader(val filename: String = "src/main/java/com/lovelace_scd/timed
         return timers;
     }
 }
-
-// Short lived class for reading and writing Medication/Timer instances to json.
-//data class MedJsonTransfer(
-//        val medicationName: String,
-//        val dosesPerTimePeriod: Int,
-//        val daysPerTimePeriod: Int,
-//        val doseSize: Double,
-//        val doseUnit: String,
-//        val takeWithFood: Boolean,
-//        val nextDose: Long,
-//        val rxFullSize: Double,
-//        val amountRemaining: Double,
-//        val numRefillsRemaining: Int,
-//        val isRefillable: Boolean,
-//        val skipNextDose: Boolean
-//);

@@ -1,5 +1,6 @@
 package com.lovelace_scd.timed.Controller
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
@@ -17,21 +18,15 @@ import com.lovelace_scd.timed.service.TestTimerObjects
 
 class MainActivity : AppCompatActivity() {
 
-    private val TAG = "ActivityLifeCycle"
-    private val timers = HashMap<String, Timer>()
+    private val TAG = "ActivityLifeCycle(MA): "
+    private val timers = TestTimerObjects.testTimers
     private lateinit var adapter: TimerAdaptor
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-//        val toolbar = findViewById<Toolbar>(R.id.header)
-//        setSupportActionBar(toolbar)
-//        val fab = findViewById<FloatingActionButton>(R.id.fab)
-//        fab.setOnClickListener { view ->
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                    .setAction("Action", null).show()
-//        }
-        if (timers.size > 0 || TestTimerObjects.testTimers.size > 0) {
-            adapter = TimerAdaptor(this, TestTimerObjects.testTimers)
+
+        if (timers.size > 0) {
+            adapter = TimerAdaptor(this, timers)
             val timerListView = findViewById<RecyclerView>(R.id.timerListView)
             timerListView.adapter = this.adapter
 
@@ -39,24 +34,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun deleteMed(view: View){
-        Log.d("View: ", view.toString())
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        val id = item.itemId
-        return if (id == R.id.action_settings) {
-            true
-        } else super.onOptionsItemSelected(item)
+    fun addMed(view: View) {
+        val addIntent = Intent(this, AddActivity::class.java)
+        startActivity(addIntent)
     }
 
     override fun onStart() {
