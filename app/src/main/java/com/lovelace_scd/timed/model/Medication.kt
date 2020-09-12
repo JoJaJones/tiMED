@@ -1,4 +1,4 @@
-package com.lovelace_scd.timed.Model
+package com.lovelace_scd.timed.model
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -11,20 +11,20 @@ open class Medication(var name: String, var rxFullSize: Double, var amountRemain
                       var daysPerTimePeriod: Int, var doseSize: Double, var takeWithFood: Boolean, var doseUnit: String) {
 
     @RequiresApi(Build.VERSION_CODES.O)
-    val timerData: TimerData = TimerData()
+//    val timerData: TimerData = TimerData()
     var calendar = Calendar.getInstance()
 
-    fun addTimer(timer: Timer){
-        timerData.addTimer(timer)
-    }
-
-    fun deleteTimer(timer: Timer){
-        timerData.deleteTimer(timer)
-    }
-
-    fun getTimers(){
-        timerData.getTimers()
-    }
+//    fun addTimer(timer: Timer){
+//        timerData.addTimer(timer)
+//    }
+//
+//    fun deleteTimer(timer: Timer){
+//        timerData.deleteTimer(timer)
+//    }
+//
+//    fun getTimers(){
+//        timerData.getTimers()
+//    }
 
     fun takeMed(){
         if (amountRemaining == 0.0){ throw error("No medication remaining")}

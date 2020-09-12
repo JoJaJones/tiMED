@@ -6,26 +6,30 @@
 
 package com.lovelace_scd.timed.io
 
+import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Klaxon
 import com.beust.klaxon.json
-import com.lovelace_scd.timed.Model.Medication
+import com.lovelace_scd.timed.model.Medication
 
 
 import com.lovelace_scd.timed.model.Timer
+import com.lovelace_scd.timed.model.TimerData
+import com.lovelace_scd.timed.services.TimerList
 import java.io.File
 
 
 class MedJsonReader(val filename: String = "src/main/java/com/lovelace_scd/timed/io/sample.json") {
     val klaxon = Klaxon();
 
-
-    fun write(timers: ArrayList<Timer>?) {
+    fun write(timers: ArrayList<Timer>?, saveFile: File) {
         val json = medTimersToJson(timers);
-        File(filename).writeText("{ \"timers\": " + json.toJsonString() + " }\n");
+
+        saveFile.writeText("{ \"timers\": " + json.toJsonString() + " }\n");
 //        val logic = json {
 //            array(timers).map {
 //                obj(it.toString() to it);
@@ -34,9 +38,9 @@ class MedJsonReader(val filename: String = "src/main/java/com/lovelace_scd/timed
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun read(): ArrayList<Timer>? {
+    fun read(saveFile: File): ArrayList<Timer>? {
         // Klaxon doesn't seem to allow a top level json array...so this is a jenky workaround.
-        val fileAsString = File(filename).readText();
+        val fileAsString = saveFile.readText();
         val res = klaxon.parse<Map<String, JsonArray<JsonObject>>>(fileAsString);
 
         return medJsonToTimers(res!!["timers"]);

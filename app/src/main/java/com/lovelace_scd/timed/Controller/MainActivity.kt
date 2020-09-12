@@ -2,12 +2,14 @@ package com.lovelace_scd.timed.Controller
 
 import android.content.Intent
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,7 +17,9 @@ import com.lovelace_scd.timed.Adaptors.TimerAdaptor
 import com.lovelace_scd.timed.R
 import com.lovelace_scd.timed.model.Timer
 import com.lovelace_scd.timed.service.TestTimerObjects
+import com.lovelace_scd.timed.services.TimerList
 
+@RequiresApi(Build.VERSION_CODES.O)
 class MainActivity : AppCompatActivity() {
 
     private val TAG = "ActivityLifeCycle(MA): "
@@ -43,9 +47,10 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "onStart called")
         super.onStart()
     }
-
+    
     override fun onResume() {
         Log.d(TAG, "onResume called")
+        Log.d("File", "${TimerList.data.getTimers()?.size}")
         super.onResume()
     }
 
