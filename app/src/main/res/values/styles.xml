@@ -15,5 +15,16 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="timePickerWhite">
+        <item name="android:textColorPrimary">@color/lightColor</item>
+        <item name="android:textColor">@color/lightColor</item>
+    </style>
 
+    <style name="MyTimePickerDialogStyle" parent="@style/ThemeOverlay.AppCompat.Dialog.Alert">
+        <item name="showTitle">false</item>
+        <item name="colorControlActivated">#ffd600</item>
+        <item name="colorAccent">#b71c1c</item>
+        <item name="android:textColorPrimary">@color/lightColor</item>
+        <item name="android:textColorSecondary">#A8A8A8</item>
+    </style>
 </resources>

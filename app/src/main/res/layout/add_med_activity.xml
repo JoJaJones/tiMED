@@ -50,377 +50,381 @@
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/pill_clipart" />
 
-    <EditText
-        android:id="@+id/refillSizeInput"
+    <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:background="@color/lightColor"
-        android:ems="10"
-        android:fontFamily="@font/architects_daughter"
-        android:inputType="date"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="@+id/remRefillInput"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/remRefillInput"
-        app:layout_constraintTop_toTopOf="@+id/remRefillInput" />
-
-    <EditText
-        android:id="@+id/remRefillInput"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:background="@color/lightColor"
-        android:ems="10"
-        android:fontFamily="@font/architects_daughter"
-        android:inputType="time"
-        android:gravity="center"
-        app:layout_constraintBottom_toTopOf="@+id/cancelBtn"
-        app:layout_constraintEnd_toStartOf="@+id/refillSizeInput"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/remRefillLabel" />
-
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/medNameInput"
-        android:layout_width="379dp"
-        android:layout_height="wrap_content"
-        android:background="@color/lightColor"
-        android:fontFamily="@font/architects_daughter"
-        android:gravity="center"
-        app:layout_constraintBottom_toTopOf="@+id/doseDetailLabel"
-        app:layout_constraintEnd_toEndOf="@+id/dosePeriodInput"
-        app:layout_constraintStart_toStartOf="@+id/doseFreqInput"
-        app:layout_constraintTop_toBottomOf="@+id/nameInputLabel" />
-
-    <TextView
-        android:id="@+id/nameInputLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:fontFamily="@font/architects_daughter"
-        android:text="Medication Name"
-        android:textColor="@android:color/background_light"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/medNameInput"
-        app:layout_constraintStart_toStartOf="@+id/medNameInput"
-        app:layout_constraintTop_toBottomOf="@+id/header2"
-        app:layout_constraintVertical_chainStyle="packed" />
-
-    <Switch
-        android:id="@+id/foodSwitch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:fontFamily="@font/architects_daughter"
-        android:text="Take with food:"
-        android:textColor="@color/lightColor"
-        app:layout_constraintStart_toStartOf="@+id/doseSizeInput"
-        app:layout_constraintTop_toBottomOf="@+id/doseSizeInput" />
-
-    <RadioGroup
-        android:id="@+id/radioGroup"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/nextDoseLabel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/doseSizeInput"
-        app:layout_constraintTop_toBottomOf="@+id/doseFreqInput">
-
-        <TextView
-            android:id="@+id/doseUnitLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/architects_daughter"
-            android:text="Dose Unit"
-            android:textColor="@color/lightColor"
-            android:textSize="18sp" />
-
-        <RadioButton
-            android:id="@+id/pillBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/architects_daughter"
-            android:text="Pill"
-            android:textColor="@color/lightColor"
-            tools:layout_editor_absoluteY="25dp" />
-
-        <RadioButton
-            android:id="@+id/mlBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/architects_daughter"
-            android:text="mL"
-            android:textColor="@color/lightColor"
-            tools:layout_editor_absoluteY="57dp" />
-
-        <RadioButton
-            android:id="@+id/ccBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/architects_daughter"
-            android:text="CC"
-            android:textColor="@color/lightColor"
-            tools:layout_editor_absoluteY="89dp" />
-    </RadioGroup>
-
-    <EditText
-        android:id="@+id/doseFreqInput"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_height="0dp"
         android:layout_marginBottom="16dp"
-        android:background="@color/lightColor"
-        android:ems="10"
-        android:fontFamily="@font/architects_daughter"
-        android:inputType="number"
-        android:gravity="center"
-        app:layout_constraintBottom_toTopOf="@+id/radioGroup"
-        app:layout_constraintEnd_toStartOf="@+id/dosePeriodInput"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/doseFreqLabel" />
-
-    <EditText
-        android:id="@+id/dosePeriodInput"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:background="@color/lightColor"
-        android:ems="10"
-        android:fontFamily="@font/architects_daughter"
-        android:inputType="number"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="@+id/doseFreqInput"
+        app:layout_constraintBottom_toTopOf="@+id/cancelBtn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/doseFreqInput"
-        app:layout_constraintTop_toTopOf="@+id/doseFreqInput" />
-
-    <EditText
-        android:id="@+id/doseSizeInput"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:background="@color/lightColor"
-        android:ems="10"
-        android:fontFamily="@font/architects_daughter"
-        android:inputType="numberDecimal"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="@+id/radioGroup"
-        app:layout_constraintEnd_toStartOf="@+id/radioGroup"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/radioGroup" />
+        app:layout_constraintTop_toBottomOf="@+id/header2"
+        app:layout_constraintVertical_bias="0.0">
 
-    <TextView
-        android:id="@+id/doseSizeLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="19dp"
-        android:layout_marginBottom="8dp"
-        android:fontFamily="@font/architects_daughter"
-        android:text="Dose Size:"
-        android:textColor="@color/lightColor"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/doseSizeInput"
-        app:layout_constraintStart_toStartOf="@+id/doseSizeInput" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/doseDetailLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="19dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="8dp"
-        android:fontFamily="@font/architects_daughter"
-        android:text="Dose Frequency:"
-        android:textColor="@color/lightColor"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/doseFreqLabel"
-        app:layout_constraintStart_toStartOf="@+id/doseFreqInput"
-        app:layout_constraintTop_toBottomOf="@+id/medNameInput" />
+            <TextView
+                android:id="@+id/nameInputLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/architects_daughter"
+                android:text="Medication Name"
+                android:textColor="@android:color/background_light"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="@+id/medNameInput"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/nextDoseLabel"
-        android:layout_width="wrap_content"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/medNameInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@color/lightColor"
+                android:fontFamily="@font/architects_daughter"
+                android:gravity="center"
+                app:layout_constraintEnd_toEndOf="@+id/dosePeriodInput"
+                app:layout_constraintStart_toStartOf="@+id/doseFreqInput"
+                app:layout_constraintTop_toBottomOf="@+id/nameInputLabel" />
+
+            <TextView
+                android:id="@+id/dosePeriodLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/architects_daughter"
+                android:text="Number of Days"
+                android:textColor="@color/lightColor"
+                app:layout_constraintBottom_toTopOf="@+id/dosePeriodInput"
+                tools:layout_editor_absoluteX="214dp" />
+
+            <TextView
+                android:id="@+id/doseFreqLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/architects_daughter"
+                android:text="Doses per"
+                android:textColor="@color/lightColor"
+                app:layout_constraintStart_toStartOf="@+id/doseFreqInput"
+                app:layout_constraintTop_toBottomOf="@+id/doseDetailLabel" />
+
+            <EditText
+                android:id="@+id/dosePeriodInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:background="@color/lightColor"
+                android:ems="10"
+                android:fontFamily="@font/architects_daughter"
+                android:gravity="center"
+                android:inputType="number"
+                app:layout_constraintBottom_toBottomOf="@+id/doseFreqInput"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/doseFreqInput"
+                app:layout_constraintTop_toTopOf="@+id/doseFreqInput" />
+
+            <EditText
+                android:id="@+id/doseFreqInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@color/lightColor"
+                android:ems="10"
+                android:fontFamily="@font/architects_daughter"
+                android:gravity="center"
+                android:inputType="number"
+                app:layout_constraintEnd_toStartOf="@+id/dosePeriodInput"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/doseFreqLabel" />
+
+            <TextView
+                android:id="@+id/doseDetailLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="19dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/architects_daughter"
+                android:text="Dose Frequency:"
+                android:textColor="@color/lightColor"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="@+id/doseFreqInput"
+                app:layout_constraintTop_toBottomOf="@+id/medNameInput" />
+
+            <EditText
+                android:id="@+id/doseSizeInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@color/lightColor"
+                android:ems="10"
+                android:fontFamily="@font/architects_daughter"
+                android:gravity="center"
+                android:inputType="numberDecimal"
+                app:layout_constraintBottom_toBottomOf="@+id/radioGroup"
+                app:layout_constraintEnd_toStartOf="@+id/radioGroup"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/radioGroup" />
+
+            <TextView
+                android:id="@+id/doseSizeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="19dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/architects_daughter"
+                android:text="Dose Size:"
+                android:textColor="@color/lightColor"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toTopOf="@+id/doseSizeInput"
+                app:layout_constraintStart_toStartOf="@+id/doseSizeInput" />
+
+            <Switch
+                android:id="@+id/foodSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/architects_daughter"
+                android:text="Take with food:"
+                android:textColor="@color/lightColor"
+                app:layout_constraintStart_toStartOf="@+id/doseSizeInput"
+                app:layout_constraintTop_toBottomOf="@+id/doseSizeInput" />
+
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/doseSizeInput"
+                app:layout_constraintTop_toBottomOf="@+id/doseFreqInput">
+
+                <TextView
+                    android:id="@+id/doseUnitLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/architects_daughter"
+                    android:text="Dose Unit"
+                    android:textColor="@color/lightColor"
+                    android:textSize="18sp" />
+
+                <RadioButton
+                    android:id="@+id/pillBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/architects_daughter"
+                    android:text="Pill"
+                    android:textColor="@color/lightColor"
+                    tools:layout_editor_absoluteY="25dp" />
+
+                <RadioButton
+                    android:id="@+id/mlBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/architects_daughter"
+                    android:text="mL"
+                    android:textColor="@color/lightColor"
+                    tools:layout_editor_absoluteY="57dp" />
+
+                <RadioButton
+                    android:id="@+id/ccBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/architects_daughter"
+                    android:text="CC"
+                    android:textColor="@color/lightColor"
+                    tools:layout_editor_absoluteY="89dp" />
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/refillLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/architects_daughter"
+                android:text="Refill Information"
+                android:textColor="@color/lightColor"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="@+id/remRefillLabel"
+                app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+
+            <TextView
+                android:id="@+id/remRefillLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/architects_daughter"
+                android:text="Refills Remaining"
+                android:textColor="@color/lightColor"
+                app:layout_constraintTop_toBottomOf="@+id/refillLabel"
+                tools:layout_editor_absoluteX="16dp" />
+
+            <EditText
+                android:id="@+id/remRefillInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@color/lightColor"
+                android:ems="10"
+                android:fontFamily="@font/architects_daughter"
+                android:gravity="center"
+                android:inputType="time"
+                app:layout_constraintEnd_toEndOf="@+id/doseFreqInput"
+                app:layout_constraintStart_toStartOf="@+id/doseFreqInput"
+                app:layout_constraintTop_toBottomOf="@+id/remRefillLabel" />
+
+            <TextView
+                android:id="@+id/refillSizeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/architects_daughter"
+                android:text="Amount per Fill"
+                android:textColor="@color/lightColor"
+                app:layout_constraintBottom_toTopOf="@+id/refillSizeInput"
+                app:layout_constraintStart_toStartOf="@+id/refillSizeInput" />
+
+            <EditText
+                android:id="@+id/refillSizeInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/lightColor"
+                android:ems="10"
+                android:fontFamily="@font/architects_daughter"
+                android:gravity="center"
+                android:inputType="date"
+                app:layout_constraintBottom_toBottomOf="@+id/remRefillInput"
+                app:layout_constraintEnd_toEndOf="@+id/dosePeriodInput"
+                app:layout_constraintStart_toStartOf="@+id/dosePeriodInput"
+                app:layout_constraintTop_toTopOf="@+id/remRefillInput" />
+
+            <TextView
+                android:id="@+id/nextDoseLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/architects_daughter"
+                android:text="Next Dose:"
+                android:textColor="@color/lightColor"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="@+id/doseTimeLabel"
+                app:layout_constraintTop_toBottomOf="@+id/remRefillInput" />
+
+            <TextView
+                android:id="@+id/doseTimeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/architects_daughter"
+                android:text="Time:"
+                android:textColor="@color/lightColor"
+                app:layout_constraintStart_toStartOf="@+id/doseTimeInput"
+                app:layout_constraintTop_toBottomOf="@+id/nextDoseLabel" />
+
+            <TimePicker
+                android:id="@+id/doseTimeInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/lightColor"
+                android:theme="@style/MyTimePickerDialogStyle"
+                android:timePickerMode="spinner"
+
+                app:layout_constraintEnd_toEndOf="@+id/refillSizeInput"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/remRefillInput"
+                app:layout_constraintTop_toBottomOf="@+id/doseTimeLabel" />
+
+            <TextView
+                android:id="@+id/doseDateLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/architects_daughter"
+                android:text="Date:"
+                android:textColor="@color/lightColor"
+                app:layout_constraintStart_toStartOf="@+id/doseTimeInput"
+                app:layout_constraintTop_toBottomOf="@+id/doseTimeInput" />
+
+            <DatePicker
+                android:id="@+id/doseDateInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:calendarViewShown="false"
+                android:datePickerMode="spinner"
+                android:theme="@style/MyTimePickerDialogStyle"
+                app:layout_constraintEnd_toEndOf="@+id/doseTimeInput"
+                app:layout_constraintStart_toStartOf="@+id/doseTimeInput"
+                app:layout_constraintTop_toBottomOf="@id/doseDateLabel" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/cancelBtn"
+        android:layout_width="182dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="8dp"
-        android:fontFamily="@font/architects_daughter"
-        android:text="Next Dose:"
+        android:layout_marginBottom="16dp"
+        android:background="@color/colorAccent"
+        android:onClick="cancelAdd"
+        android:text="Cancel"
         android:textColor="@color/lightColor"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/doseTimeLabel"
-        app:layout_constraintStart_toStartOf="@+id/doseTimeLabel"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
-
-    <TextView
-        android:id="@+id/doseTimeLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/architects_daughter"
-        android:text="Time:"
-        android:textColor="@color/lightColor"
-        app:layout_constraintBottom_toTopOf="@+id/doseTimeInput"
-        app:layout_constraintStart_toStartOf="@+id/doseTimeInput"
-        app:layout_constraintTop_toBottomOf="@+id/nextDoseLabel" />
-
-    <TextView
-        android:id="@+id/doseDateLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:fontFamily="@font/architects_daughter"
-        android:text="Date:"
-        android:textColor="@color/lightColor"
-        app:layout_constraintBottom_toTopOf="@+id/doseDateInput"
-        app:layout_constraintStart_toStartOf="@+id/doseDateInput" />
-
-    <TextView
-        android:id="@+id/doseFreqLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/architects_daughter"
-        android:text="Doses per"
-        android:textColor="@color/lightColor"
-        app:layout_constraintBottom_toTopOf="@+id/doseFreqInput"
-        app:layout_constraintStart_toStartOf="@+id/doseFreqInput"
-        app:layout_constraintTop_toBottomOf="@+id/doseDetailLabel" />
-
-    <TextView
-        android:id="@+id/dosePeriodLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:fontFamily="@font/architects_daughter"
-        android:text="Number of Days"
-        android:textColor="@color/lightColor"
-        app:layout_constraintBottom_toTopOf="@+id/dosePeriodInput"
-        app:layout_constraintStart_toStartOf="@+id/dosePeriodInput" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/saveInputBtn"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/saveInputBtn"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/saveInputBtn"
-        android:layout_width="0dp"
+        android:layout_width="182dp"
         android:layout_height="wrap_content"
         android:background="@color/acceptColor"
         android:onClick="saveMed"
         android:text="Save Medication"
         android:textColor="@color/lightColor"
         app:layout_constraintBottom_toBottomOf="@+id/cancelBtn"
-        app:layout_constraintEnd_toEndOf="@+id/refillSizeInput"
-        app:layout_constraintStart_toStartOf="@+id/refillSizeInput"
-        app:layout_constraintTop_toTopOf="@+id/cancelBtn" />
-
-    <Button
-        android:id="@+id/cancelBtn"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="@color/colorAccent"
-        android:onClick="cancelAdd"
-        android:text="Cancel"
-        android:textColor="@color/lightColor"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/remRefillInput"
-        app:layout_constraintStart_toStartOf="@+id/remRefillInput"
-        app:layout_constraintTop_toBottomOf="@+id/remRefillInput" />
-
-    <EditText
-        android:id="@+id/doseTimeInput"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="16dp"
-        android:background="@color/lightColor"
-        android:ems="10"
-        android:fontFamily="@font/architects_daughter"
-        android:inputType="time"
-        android:gravity="center"
-        app:layout_constraintBottom_toTopOf="@+id/refillLabel"
-        app:layout_constraintEnd_toStartOf="@+id/doseDateInput"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/doseTimeLabel" />
-
-    <EditText
-        android:id="@+id/doseDateInput"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:background="@color/lightColor"
-        android:ems="10"
-        android:fontFamily="@font/architects_daughter"
-        android:inputType="date"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="@+id/doseTimeInput"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/doseTimeInput"
-        app:layout_constraintTop_toTopOf="@+id/doseTimeInput"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintStart_toEndOf="@+id/cancelBtn"
+        app:layout_constraintTop_toTopOf="@+id/cancelBtn" />
 
-    <TextView
-        android:id="@+id/refillLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/architects_daughter"
-        android:text="Refill Information"
-        android:textColor="@color/lightColor"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/remRefillLabel"
-        app:layout_constraintStart_toStartOf="@+id/remRefillLabel"
-        app:layout_constraintTop_toBottomOf="@+id/doseTimeInput" />
 
-    <TextView
-        android:id="@+id/refillSizeLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:fontFamily="@font/architects_daughter"
-        android:text="Amount per Refill"
-        android:textColor="@color/lightColor"
-        app:layout_constraintBottom_toTopOf="@+id/refillSizeInput"
-        app:layout_constraintStart_toStartOf="@+id/refillSizeInput" />
-
-    <TextView
-        android:id="@+id/remRefillLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:fontFamily="@font/architects_daughter"
-        android:text="Refills Remaining"
-        android:textColor="@color/lightColor"
-        app:layout_constraintBottom_toTopOf="@+id/remRefillInput"
-        app:layout_constraintStart_toStartOf="@+id/remRefillInput"
-        app:layout_constraintTop_toBottomOf="@+id/refillLabel" />
+    <!--    <EditText-->
+    <!--        android:id="@+id/doseDateInput"-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginStart="8dp"-->
+    <!--        android:layout_marginLeft="8dp"-->
+    <!--        android:layout_marginEnd="16dp"-->
+    <!--        android:layout_marginRight="16dp"-->
+    <!--        android:background="@color/lightColor"-->
+    <!--        android:ems="10"-->
+    <!--        android:fontFamily="@font/architects_daughter"-->
+    <!--        android:inputType="date"-->
+    <!--        android:gravity="center"-->
+    <!--        app:layout_constraintBottom_toBottomOf="@+id/doseTimeInput"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="0.5"-->
+    <!--        app:layout_constraintStart_toEndOf="@+id/doseTimeInput"-->
+    <!--        app:layout_constraintTop_toTopOf="@+id/doseTimeInput"-->
+    <!--        app:layout_constraintVertical_bias="1.0" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

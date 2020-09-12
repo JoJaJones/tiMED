@@ -4,9 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.EditText
-import android.widget.RadioButton
-import android.widget.Switch
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.lovelace_scd.timed.R
@@ -29,8 +27,8 @@ class AddActivity: AppCompatActivity() {
         var tempString = ""
         var doseFreq = -1
         var dosePeriod = -1
-        var doseSize = -1.0
-        var refillRemaining = -1
+        var doseSize = 1.0
+        var refillRemaining = 0
         var refillSize = -1.0
         var name = findViewById<TextInputEditText>(R.id.medNameInput).text.toString()
 
@@ -48,8 +46,8 @@ class AddActivity: AppCompatActivity() {
         if (tempString.length > 0) {
             doseSize = tempString.toDouble()
         }
-        var doseTimeStr = findViewById<EditText>(R.id.doseTimeInput).text.toString()
-        var doseDateStr = findViewById<EditText>(R.id.doseDateInput).text.toString()
+        var doseTime = findViewById<TimePicker>(R.id.doseTimeInput)
+        var doseDate = findViewById<DatePicker>(R.id.doseDateInput)
 
         tempString  = findViewById<EditText>(R.id.remRefillInput).text.toString()
         if (tempString.length > 0) {
@@ -72,7 +70,7 @@ class AddActivity: AppCompatActivity() {
             doseUnit = "CC"
         }
         Log.d("Form Test: ", "${name} ${doseFreq} ${dosePeriod} ${doseSize}\n" +
-                "${doseTimeStr} ${doseDateStr} ${refillRemaining} ${refillSize}\n" +
+                "${doseTime} ${doseDate} ${refillRemaining} ${refillSize}\n" +
                 "${withFood} $doseUnit")
         // TODO: med saving/validating code here
         finish()
