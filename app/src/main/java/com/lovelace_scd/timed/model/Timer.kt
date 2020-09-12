@@ -1,45 +1,63 @@
 /// filename: Timer.kt
-/// description: CountDownTimer subclass which manages time to next dose of medidation. We must
+/// description: CountDownTimer subclass which manages time to next dose of medication. We must
 ///     pass in an instance of Medication, and Timer provides interface for UI to interact with
 ///     when determining time to notify user of next dose, mark dose as taken and decrement
 ///     Medication.amountRemaining, reschedule next dose notification, etc.
 
 package com.lovelace_scd.timed.model
 
+import android.os.Build
 import android.os.CountDownTimer
+import androidx.annotation.RequiresApi
 import com.lovelace_scd.timed.Model.Medication
+import java.util.*
 
 
 const val millisecondsPerDay = 24 * 60 * 60 * 1000;
 const val millisecondsPerMinute = 60 * 1000;
 const val millisecondsPerSecond = 1000;
 
-class Timer : CountDownTimer {
+class Timer {
 
 
-    private var millisecondsToNextDose: Long;
-    private var medication: Medication;
+    var millisecondsToNextDose: Long = 0;
+    var medication: Medication;
+    var baseDate : Long;
 
     // Keep millisecondsNextDoseAdjusted separate from millisecondsToNextDose to allow
     //  user option to continue to adjust all future dose times. For example, if user selects from
     //  UI "Delay next dose 2 hours", when user eventually marks dose as taken, we can easily allow
     //  user to schedule all next doses for 2 hours later.
-    private var millisecondsNextDoseAdjusted: Long;
-    private var skipNextDose: Boolean;
-    private var nextDoseReady: Boolean;
+    var millisecondsNextDoseAdjusted: Long = 0;
+    var skipNextDose: Boolean;
+    var nextDoseReady: Boolean;
 
-    constructor(medication: Medication, skipNextDose: Boolean = false, nextDoseReady: Boolean = false) :
-            super((medication.dosesPerTimePeriod / medication.daysPerTimePeriod * millisecondsPerDay).toLong(),
-                    millisecondsPerSecond.toLong()) {
+    @RequiresApi(Build.VERSION_CODES.O)
+    constructor(medication: Medication, date: Date, skipNextDose: Boolean = false, nextDoseReady: Boolean = false) {
 
         this.medication = medication;
+//        this.baseDate = date;
         this.skipNextDose = skipNextDose;
         this.nextDoseReady = nextDoseReady;
+        this.baseDate = date.toInstant().toEpochMilli();
+        startTimer();
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    constructor(medication: Medication, baseDate: Long, skipNextDose: Boolean = false, nextDoseReady: Boolean = false) {
 
+        this.medication = medication;
+//        this.baseDate = date;
+        this.skipNextDose = skipNextDose;
+        this.nextDoseReady = nextDoseReady;
+        this.baseDate = baseDate;
+        startTimer();
+    }
+
+
+    fun startTimer() {
         millisecondsToNextDose = (medication.dosesPerTimePeriod / medication.daysPerTimePeriod * millisecondsPerDay).toLong();
         millisecondsNextDoseAdjusted = 0;
     }
-
 
     fun getSecondsToNextDose(): Long {
         return millisecondsToNextDose / millisecondsPerSecond;
@@ -60,23 +78,9 @@ class Timer : CountDownTimer {
 
     }
 
-
-    override fun onTick(p0: Long) {
-        millisecondsToNextDose = p0;
-    }
-
-    override fun onFinish() {
-        if (!skipNextDose) {
-            nextDoseReady = true;
-        }
-
-        skipNextDose = false;
-        this.start();
-
-    }
-
     fun toMap(): Map<String, Any> {
         var map = medication.toMap();
+        map["baseDate"] = baseDate;
         map["skipNextDose"] = skipNextDose;
         map["nextDoseReady"] = nextDoseReady;
         map["millisecondsToNextDose"] = millisecondsToNextDose;
@@ -85,4 +89,28 @@ class Timer : CountDownTimer {
         return map;
     }
     
+}
+
+class CountingTimer : CountDownTimer{
+    val timer : Timer;
+
+    constructor(timer: Timer, milliseconds: Long) :
+        super(milliseconds, millisecondsPerSecond.toLong()) {
+        this.timer = timer;
+
+    }
+
+    override fun onTick(p0: Long) {
+        timer.millisecondsToNextDose = p0;
+    }
+
+    override fun onFinish() {
+        if (!timer.skipNextDose) {
+            timer.nextDoseReady = true;
+        }
+
+        timer.skipNextDose = false;
+        this.start();
+
+    }
 }

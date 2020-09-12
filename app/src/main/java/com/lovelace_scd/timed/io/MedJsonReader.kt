@@ -6,6 +6,8 @@
 
 package com.lovelace_scd.timed.io
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Klaxon
@@ -29,6 +31,7 @@ class MedJsonReader(val filename: String = "src/main/java/com/lovelace_scd/timed
 //        }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun read(): ArrayList<Timer>? {
         // Klaxon doesn't seem to allow a top level json array...so this is a jenky workaround.
         val fileAsString = File(filename).readText();
@@ -46,6 +49,7 @@ class MedJsonReader(val filename: String = "src/main/java/com/lovelace_scd/timed
         return jsonArr;
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun medJsonToTimers(medJsonTransfer: JsonArray<JsonObject>?): ArrayList<Timer> {
         val timers = ArrayList<Timer>();
 
@@ -63,7 +67,7 @@ class MedJsonReader(val filename: String = "src/main/java/com/lovelace_scd/timed
                         tim["takeWithFood"] as Boolean,
                         tim["doseUnit"] as String,
                 );
-                timers.add(Timer(med, tim["skipNextDose"] as Boolean, tim["nextDoseReady"] as Boolean));
+                timers.add(Timer(med, (tim["baseDate"] as Int).toLong(), tim["skipNextDose"] as Boolean, tim["nextDoseReady"] as Boolean));
             }
         }
         return timers;
