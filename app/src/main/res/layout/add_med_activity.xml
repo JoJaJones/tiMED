@@ -4,7 +4,51 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark">
+    android:background="@color/colorPrimaryDark"
+    tools:context=".Controller.AddActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/header2"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/appName2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:fontFamily="@font/architects_daughter"
+        android:text="tiMED"
+        android:textColor="@color/lightColor"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="@+id/header2"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/header2"
+        app:layout_constraintVertical_bias="0.51" />
+
+    <ImageView
+        android:id="@+id/logo2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintBottom_toBottomOf="@+id/header2"
+        app:layout_constraintDimensionRatio="h,1:1"
+        app:layout_constraintEnd_toEndOf="@+id/header2"
+        app:layout_constraintTop_toTopOf="@+id/header2"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/pill_clipart" />
 
     <EditText
         android:id="@+id/refillSizeInput"
@@ -57,7 +101,6 @@
         android:id="@+id/nameInputLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_marginBottom="8dp"
         android:fontFamily="@font/architects_daughter"
         android:text="Medication Name"
@@ -65,7 +108,7 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/medNameInput"
         app:layout_constraintStart_toStartOf="@+id/medNameInput"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/header2"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <Switch
@@ -233,8 +276,8 @@
         android:fontFamily="@font/architects_daughter"
         android:text="Time:"
         android:textColor="@color/lightColor"
-        app:layout_constraintBottom_toTopOf="@+id/editTextTime"
-        app:layout_constraintStart_toStartOf="@+id/editTextTime"
+        app:layout_constraintBottom_toTopOf="@+id/doseTimeInput"
+        app:layout_constraintStart_toStartOf="@+id/doseTimeInput"
         app:layout_constraintTop_toBottomOf="@+id/nextDoseLabel" />
 
     <TextView
@@ -245,8 +288,8 @@
         android:fontFamily="@font/architects_daughter"
         android:text="Date:"
         android:textColor="@color/lightColor"
-        app:layout_constraintBottom_toTopOf="@+id/editTextDate"
-        app:layout_constraintStart_toStartOf="@+id/editTextDate" />
+        app:layout_constraintBottom_toTopOf="@+id/doseDateInput"
+        app:layout_constraintStart_toStartOf="@+id/doseDateInput" />
 
     <TextView
         android:id="@+id/doseFreqLabel"
@@ -275,6 +318,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/acceptColor"
+        android:onClick="saveMed"
         android:text="Save Medication"
         android:textColor="@color/lightColor"
         app:layout_constraintBottom_toBottomOf="@+id/cancelBtn"
@@ -288,6 +332,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:background="@color/colorAccent"
+        android:onClick="cancelAdd"
         android:text="Cancel"
         android:textColor="@color/lightColor"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -296,7 +341,7 @@
         app:layout_constraintTop_toBottomOf="@+id/remRefillInput" />
 
     <EditText
-        android:id="@+id/editTextTime"
+        android:id="@+id/doseTimeInput"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -310,13 +355,13 @@
         android:fontFamily="@font/architects_daughter"
         android:inputType="time"
         app:layout_constraintBottom_toTopOf="@+id/refillLabel"
-        app:layout_constraintEnd_toStartOf="@+id/editTextDate"
+        app:layout_constraintEnd_toStartOf="@+id/doseDateInput"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/doseTimeLabel" />
 
     <EditText
-        android:id="@+id/editTextDate"
+        android:id="@+id/doseDateInput"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -327,11 +372,11 @@
         android:ems="10"
         android:fontFamily="@font/architects_daughter"
         android:inputType="date"
-        app:layout_constraintBottom_toBottomOf="@+id/editTextTime"
+        app:layout_constraintBottom_toBottomOf="@+id/doseTimeInput"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/editTextTime"
-        app:layout_constraintTop_toTopOf="@+id/editTextTime"
+        app:layout_constraintStart_toEndOf="@+id/doseTimeInput"
+        app:layout_constraintTop_toTopOf="@+id/doseTimeInput"
         app:layout_constraintVertical_bias="1.0" />
 
     <TextView
@@ -344,7 +389,7 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/remRefillLabel"
         app:layout_constraintStart_toStartOf="@+id/remRefillLabel"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTime" />
+        app:layout_constraintTop_toBottomOf="@+id/doseTimeInput" />
 
     <TextView
         android:id="@+id/refillSizeLabel"

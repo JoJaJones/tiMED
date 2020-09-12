@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.CountDownTimer
 import androidx.annotation.RequiresApi
 import com.lovelace_scd.timed.Model.Medication
+//import com.lovelace_scd.timed.model.Medication
 import java.util.*
 
 
