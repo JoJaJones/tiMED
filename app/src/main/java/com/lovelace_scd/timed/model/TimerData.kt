@@ -10,7 +10,7 @@ class TimerData {
 
     @RequiresApi(Build.VERSION_CODES.O)
     constructor () {
-        timerData = jsonReader.read();
+        timerData = jsonReader.read() ?: ArrayList()
     }
 
     fun getTimers() : ArrayList<Timer>? {
