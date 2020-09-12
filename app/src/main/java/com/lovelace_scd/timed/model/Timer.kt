@@ -19,7 +19,7 @@ const val millisecondsPerSecond = 1000;
 
 class Timer {
 
-
+    lateinit var countingTimer : CountDownTimer;
     var millisecondsToNextDose: Long = 0;
     var medication: Medication;
     var baseDate : Long;
@@ -54,9 +54,22 @@ class Timer {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun startTimer() {
-        millisecondsToNextDose = (medication.dosesPerTimePeriod / medication.daysPerTimePeriod * millisecondsPerDay).toLong();
+
+        var now = Date().toInstant().toEpochMilli();
+        var timerAdjustment = (now - baseDate) % millisecondsPerDay;
+
+
+        millisecondsToNextDose = (medication.dosesPerTimePeriod / medication.daysPerTimePeriod * millisecondsPerDay).toLong() - timerAdjustment;
         millisecondsNextDoseAdjusted = 0;
+
+        countingTimer = CountingTimer(this, millisecondsToNextDose);
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun restartTimer() {
+        startTimer();
     }
 
     fun getSecondsToNextDose(): Long {
@@ -78,6 +91,10 @@ class Timer {
 
     }
 
+    fun notification() {
+        print("Med timer: ${medication.name} ready...");
+    }
+
     fun toMap(): Map<String, Any> {
         var map = medication.toMap();
         map["baseDate"] = baseDate;
@@ -92,7 +109,7 @@ class Timer {
 }
 
 class CountingTimer : CountDownTimer{
-    val timer : Timer;
+    val timer : Timer; // Reference so we can call notify, or something similar.
 
     constructor(timer: Timer, milliseconds: Long) :
         super(milliseconds, millisecondsPerSecond.toLong()) {
@@ -107,10 +124,10 @@ class CountingTimer : CountDownTimer{
     override fun onFinish() {
         if (!timer.skipNextDose) {
             timer.nextDoseReady = true;
+            timer.notification();
         }
 
         timer.skipNextDose = false;
-        this.start();
-
+        timer.restartTimer();
     }
 }
