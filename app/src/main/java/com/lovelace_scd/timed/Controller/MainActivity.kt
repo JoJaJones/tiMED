@@ -1,16 +1,21 @@
 package com.lovelace_scd.timed.Controller
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.lovelace_scd.timed.Adaptors.TimerAdaptor
 import com.lovelace_scd.timed.R
 import com.lovelace_scd.timed.model.Timer
 
 class MainActivity : AppCompatActivity() {
+
     private val TAG = "ActivityLifeCycle"
     private val timers = HashMap<String, Timer>()
+    private lateinit var adapter: TimerAdaptor
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -21,6 +26,19 @@ class MainActivity : AppCompatActivity() {
 //            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                    .setAction("Action", null).show()
 //        }
+        if (timers.size > 0) {
+            adapter = TimerAdaptor(this, timers.values.toList())
+
+            timerListView.adapter = this.adapter
+            var spanCount = 2
+            if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                spanCount = 3
+            } else {
+                spanCount = 2
+            }
+
+            productListView.layoutManager = GridLayoutManager(this, spanCount)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
