@@ -84,7 +84,7 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
                     foodCountdown?.cancel()
                 }
                 removeTimer(adapterPosition)
-                
+
                 flag = false
             }
             else if (view == takeMedBtn) {
