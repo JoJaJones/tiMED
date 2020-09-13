@@ -3,27 +3,27 @@ package com.lovelace_scd.timed.Adaptors
 import android.content.Context
 import android.os.Build
 import android.os.CountDownTimer
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
 import com.lovelace_scd.timed.R
-import com.lovelace_scd.timed.model.TestTimer
+import com.lovelace_scd.timed.util.CHANNEL_ID
 import com.lovelace_scd.timed.model.Timer
 import com.lovelace_scd.timed.model.TimerData
-import com.lovelace_scd.timed.test_code.Test
 import java.lang.Exception
-import java.util.*
-import java.util.concurrent.CountDownLatch
 
 const val DELAY_AMOUNT = 10 * 60 //10 min snooze
+const val MILLS_PER_30_MIN = 30L*60L*1000L
 
 @RequiresApi(Build.VERSION_CODES.O)
 class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.Adapter<TimerAdaptor.Holder>() {
+    var notificationNumber = 0
     override fun onCreateViewHolder(parent: ViewGroup, position: Int): Holder {
         val view = LayoutInflater.from(context).inflate(R.layout.timer_list_item, parent, false)
         return Holder(view)
@@ -40,6 +40,7 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
     inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener{
         lateinit var timer: Timer
         lateinit var countdown: CountDownTimer
+        var foodCountdown: CountDownTimer? = null
         val medName: TextView? = itemView.findViewById(R.id.medName)
         var deleteMedBtn: ImageButton? = itemView.findViewById(R.id.delButton)
         var takeMedBtn: ImageButton? = itemView.findViewById(R.id.takeBtn)
@@ -55,7 +56,9 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
         fun bindTimer(timer: Timer, context: Context){
             this.timer = timer
             itemView.setOnClickListener(this)
-            countdown = DisplayCountdown(medTimerText, timer.calculateTimeRemaining(), 1000L).start()
+            countdown = DisplayCountdown(
+                    medTimerText, timer, context, notificationNumber++,
+                    timer.calculateTimeRemaining(), 1000L, ).start()
             medName?.text = timer.medication.name
             deleteMedBtn?.setOnClickListener(this)
             takeMedBtn?.setOnClickListener(this)
@@ -63,6 +66,10 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
             delayDoseBtn?.setOnClickListener(this)
             refillBtn?.setOnClickListener(this)
             refillsRemaining?.setText(timer.medication.numRefillsRemaining.toString())
+
+            if(timer.medication.takeWithFood){
+                foodCountdown = FoodCountdown(timer, context, notificationNumber++, timer.calculateTimeRemaining()- MILLS_PER_30_MIN).start()
+            }
         }
 
         /*******************************************************************************************
@@ -71,42 +78,70 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
          ******************************************************************************************/
         override fun onClick(view: View){
             var flag = true
-            if (view == deleteMedBtn) {
-                removeTimer(adapterPosition)
-                countdown.cancel()
-                flag = false
-            } else if (view == takeMedBtn){
-                countdown.cancel()
-                countdown = takeDose(countdown, timer, medTimerText)
-                countdown.start()
+            when (view) {
+                deleteMedBtn -> {
+                    removeTimer(adapterPosition)
+                    countdown.cancel()
 
-            } else if (view == skipDoseBtn){
-                countdown.cancel()
-                countdown = skipDose(countdown, timer, medTimerText)
-                countdown.start()
+                    if(timer.medication.takeWithFood){
+                        foodCountdown?.cancel()
+                    }
 
-            } else if (view == delayDoseBtn){
-                countdown.cancel()
-                countdown = delayDose(countdown, timer, medTimerText)
-                countdown.start()
+                    flag = false
+                }
+                takeMedBtn -> {
+                    countdown.cancel()
+                    countdown = takeDose(timer, medTimerText)
+                    countdown.start()
 
-            } else if (view == refillBtn){
-                refillMed(timer, refillsRemaining)
-            } else {
-                // generate a pop up message if the user clicks on the timer without touching any
-                // of the buttons
-                var daysToRefillNeeded: Double = timer.medication.amountRemaining /
-                                                 timer.medication.doseSize *
-                                                 timer.medication.daysPerTimePeriod.toDouble() /
-                                                 timer.medication.dosesPerTimePeriod.toDouble()
+                    if(timer.medication.takeWithFood){
+                        foodCountdown?.cancel()
+                        foodCountdown = takeDose(timer, medTimerText, true)
+                        foodCountdown?.start()
+                    }
+                }
+                skipDoseBtn -> {
+                    countdown.cancel()
+                    countdown = skipDose(timer, medTimerText)
+                    countdown.start()
 
-                val toastDoseUnit = if (timer.medication.doseUnit == "N/A") "" else timer.medication.doseUnit + "s "
-                Toast.makeText(context, "${timer.medication.name}: you have " +
-                        "${timer.medication.amountRemaining} ${toastDoseUnit}left. " +
-                        "You need a refill in ${daysToRefillNeeded.toInt()} days",
-                        Toast.LENGTH_SHORT).show()
-                flag = false
+                    if(timer.medication.takeWithFood){
+                        foodCountdown?.cancel()
+                        foodCountdown = takeDose(timer, medTimerText, true)
+                        foodCountdown?.start()
+                    }
+                }
+                delayDoseBtn -> {
+                    countdown.cancel()
+                    countdown = delayDose(timer, medTimerText)
+                    countdown.start()
+
+                    if(timer.medication.takeWithFood){
+                        foodCountdown?.cancel()
+                        foodCountdown = takeDose(timer, medTimerText, true)
+                        foodCountdown?.start()
+                    }
+                }
+                refillBtn -> {
+                    refillMed(timer, refillsRemaining)
+                }
+                else -> {
+                    // generate a pop up message if the user clicks on the timer without touching any
+                    // of the buttons
+                    var daysToRefillNeeded: Double = timer.medication.amountRemaining /
+                            timer.medication.doseSize *
+                            timer.medication.daysPerTimePeriod.toDouble() /
+                            timer.medication.dosesPerTimePeriod.toDouble()
+    
+                    val toastDoseUnit = if (timer.medication.doseUnit == "N/A") "" else timer.medication.doseUnit + "s "
+                    Toast.makeText(context, "${timer.medication.name}: you have " +
+                            "${timer.medication.amountRemaining} ${toastDoseUnit}left. " +
+                            "You need a refill in ${daysToRefillNeeded.toInt()} days",
+                            Toast.LENGTH_SHORT).show()
+                    flag = false
+                }
             }
+            
             if(flag) {
                 timers.updateTimers(context)
             }
@@ -127,7 +162,7 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
      * Function to indicate that the user has taken a dose of the specified medication and
      * cause relevant data changes to the Medication and Timer objects
      ******************************************************************************************/
-    fun takeDose(countdown: CountDownTimer, timer: Timer, view: TextView?)
+    fun takeDose(timer: Timer, view: TextView?, foodTimer: Boolean = false)
             : CountDownTimer{
         try {
             timer.markTaken()
@@ -135,27 +170,43 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
 
             Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
         }
-        return DisplayCountdown(view, timer.calculateTimeRemaining(), 1000L)
+        return if(foodTimer) {
+            FoodCountdown(timer, context, notificationNumber++,
+                    timer.calculateTimeRemaining() - (MILLS_PER_30_MIN))
+        } else {
+            DisplayCountdown(view, timer, context, notificationNumber++, timer.calculateTimeRemaining(), 1000L)
+        }
     }
 
     /*******************************************************************************************
      * Function to delay the indicated medication's timer by 10 minutes
      ******************************************************************************************/
-    fun delayDose(countdown: CountDownTimer, timer: Timer, view: TextView?)
+    fun delayDose(timer: Timer, view: TextView?, foodTimer: Boolean = false)
             : CountDownTimer{
 
         timer.adjustNextDoseTime(DELAY_AMOUNT*1000L)
-        return DisplayCountdown(view, timer.calculateTimeRemaining(), 1000L)
+        return if(foodTimer) {
+            FoodCountdown(timer, context, notificationNumber++,
+                    timer.calculateTimeRemaining() - (MILLS_PER_30_MIN))
+        } else {
+            DisplayCountdown(view, timer, context, notificationNumber++, timer.calculateTimeRemaining(), 1000L)
+        }
     }
 
     /*******************************************************************************************
      * Function to skip the current dosage of the medication and adjust the timer to the next
      * scheduled time
      ******************************************************************************************/
-    fun skipDose(countdown: CountDownTimer, timer: Timer, view: TextView?)
+    fun skipDose(timer: Timer, view: TextView?, foodTimer: Boolean = false)
             : CountDownTimer{
         timer.skipNextDose()
-        return DisplayCountdown(view, timer.calculateTimeRemaining(), 1000L)
+        
+        return if(foodTimer) {
+            FoodCountdown(timer, context, notificationNumber++, 
+                    timer.calculateTimeRemaining() - (MILLS_PER_30_MIN))   
+        } else {
+            DisplayCountdown(view, timer, context, notificationNumber++, timer.calculateTimeRemaining(), 1000L)
+        }
     }
 
     /*******************************************************************************************
@@ -178,7 +229,9 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
 /*******************************************************************************************
  * Countdown class to format the time until the next dose is due in DD:HH:MM:SS format
  ******************************************************************************************/
-class DisplayCountdown (val view: TextView?, time: Long, msPerSec: Long) : CountDownTimer(time, msPerSec) {
+class DisplayCountdown(val view: TextView?, val timer: Timer, val context: Context, val id: Int,
+                       time: Long,
+                       msPerSec: Long) : CountDownTimer(time, msPerSec) {
     var seconds = 0L
     var mins = 0L
     var hours = 0L
@@ -217,5 +270,39 @@ class DisplayCountdown (val view: TextView?, time: Long, msPerSec: Long) : Count
 
     override fun onFinish() {
         view?.text = "Now!"
+        var builder = NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.drawable.pill_clipart)
+                .setContentTitle(timer.medication.name)
+                .setContentText("Take ${timer.medication.name}")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setCategory(NotificationCompat.CATEGORY_REMINDER)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setAutoCancel(true)
+
+        with(NotificationManagerCompat.from(context)) {
+            notify(id, builder.build())
+        }
+    }
+}
+
+class FoodCountdown(val timer: Timer, var context: Context, val id: Int, var timeRemaining: Long,): CountDownTimer(timeRemaining, 1000L) {
+    override fun onTick(millisUntilFinished: Long) {
+
+    }
+
+    override fun onFinish() {
+        var builder = NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.drawable.pill_clipart)
+                .setContentTitle(timer.medication.name)
+                .setContentText("Eat food so you can take ${timer.medication.name} in 30 min")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setCategory(NotificationCompat.CATEGORY_REMINDER)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setOnlyAlertOnce(true)
+                .setAutoCancel(true)
+
+        with(NotificationManagerCompat.from(context)) {
+            notify(id, builder.build())
+        }
     }
 }
