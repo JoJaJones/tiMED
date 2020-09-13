@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
+        timers.loadTimers(this)
         adapter = TimerAdaptor(this, timers)
         val timerListView = findViewById<RecyclerView>(R.id.timerListView)
         timerListView.adapter = this.adapter
