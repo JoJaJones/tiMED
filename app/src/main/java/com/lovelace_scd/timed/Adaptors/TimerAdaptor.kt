@@ -100,8 +100,9 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
                                                  timer.medication.daysPerTimePeriod.toDouble() /
                                                  timer.medication.dosesPerTimePeriod.toDouble()
 
+                val toastDoseUnit = if (timer.medication.doseUnit == "N/A") "" else timer.medication.doseUnit + "s "
                 Toast.makeText(context, "${timer.medication.name}: you have " +
-                        "${timer.medication.amountRemaining} ${timer.medication.doseUnit}s left. " +
+                        "${timer.medication.amountRemaining} ${toastDoseUnit}left. " +
                         "You need a refill in ${daysToRefillNeeded.toInt()} days",
                         Toast.LENGTH_SHORT).show()
                 flag = false

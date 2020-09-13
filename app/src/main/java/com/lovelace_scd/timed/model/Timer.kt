@@ -106,7 +106,16 @@ class Timer {
     }
 
     fun calculateNextDoseTime(){
-        this.nextDoseDue += ((medication.daysPerTimePeriod.toDouble() / medication.dosesPerTimePeriod.toDouble() ) * millisecondsPerDay).toLong()
+        this.nextDoseDue += ((medication.daysPerTimePeriod.toDouble() /
+                            medication.dosesPerTimePeriod.toDouble() ) *
+                            millisecondsPerDay).toLong()
+        
+        if(this.nextDoseDue < Date().toInstant().toEpochMilli()) {
+            this.nextDoseDue = Date().toInstant().toEpochMilli() +
+                               ((medication.daysPerTimePeriod.toDouble() /
+                               medication.dosesPerTimePeriod.toDouble() ) *
+                               millisecondsPerDay).toLong()
+        }
         this.nextDoseDueAdjusted = nextDoseDue
     }
 
