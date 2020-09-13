@@ -6,20 +6,15 @@
 
 package com.lovelace_scd.timed.io
 
-import android.content.Context
-import android.content.Context.MODE_PRIVATE
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Klaxon
-import com.beust.klaxon.json
 import com.lovelace_scd.timed.model.Medication
 
 
 import com.lovelace_scd.timed.model.Timer
-import com.lovelace_scd.timed.model.TimerData
-import com.lovelace_scd.timed.services.TimerList
 import java.io.File
 
 
@@ -66,12 +61,12 @@ class MedJsonReader(val filename: String = "src/main/java/com/lovelace_scd/timed
                         tim["rxFullSize"] as Double,
                         tim["amountRemaining"] as Double,
                         tim["numRefillsRemaining"] as Int,
-                        tim["isRefillable"] as Boolean,
                         tim["dosesPerTimePeriod"] as Int,
                         tim["daysPerTimePeriod"] as Int,
                         tim["doseSize"] as Double,
                         tim["takeWithFood"] as Boolean,
                         tim["doseUnit"] as String,
+                        tim["isRefillable"] as Boolean,
                 );
                 timers.add(Timer(med, (tim["baseDate"] as Int).toLong(), tim["skipNextDose"] as Boolean, tim["nextDoseReady"] as Boolean));
             }

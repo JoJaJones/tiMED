@@ -1,53 +1,59 @@
 package com.lovelace_scd.timed.Controller
 
+import android.R.attr
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lovelace_scd.timed.Adaptors.TimerAdaptor
 import com.lovelace_scd.timed.R
-import com.lovelace_scd.timed.model.Timer
-import com.lovelace_scd.timed.service.TestTimerObjects
 import com.lovelace_scd.timed.services.TimerList
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 class MainActivity : AppCompatActivity() {
 
     private val TAG = "ActivityLifeCycle(MA): "
-    private val timers = TestTimerObjects.testTimers
+    private val timers = TimerList.data
     private lateinit var adapter: TimerAdaptor
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (timers.size > 0) {
-            adapter = TimerAdaptor(this, timers)
-            val timerListView = findViewById<RecyclerView>(R.id.timerListView)
-            timerListView.adapter = this.adapter
 
-            timerListView.layoutManager = LinearLayoutManager(this)
-        }
+        adapter = TimerAdaptor(this, timers)
+        val timerListView = findViewById<RecyclerView>(R.id.timerListView)
+        timerListView.adapter = this.adapter
+
+        timerListView.layoutManager = LinearLayoutManager(this)
+
     }
 
     fun addMed(view: View) {
         val addIntent = Intent(this, AddActivity::class.java)
-        startActivity(addIntent)
+        startActivityForResult(addIntent, 0)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(requestCode == 0) {
+            if(resultCode == 1) {
+                adapter.notifyDataSetChanged()
+            }
+        }
     }
 
     override fun onStart() {
         Log.d(TAG, "onStart called")
         super.onStart()
     }
-    
+
     override fun onResume() {
         Log.d(TAG, "onResume called")
         Log.d("File", "${TimerList.data.getTimers()?.size}")

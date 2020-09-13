@@ -13,7 +13,6 @@ import com.lovelace_scd.timed.model.Medication
 import com.lovelace_scd.timed.R
 import com.lovelace_scd.timed.model.Timer
 import com.lovelace_scd.timed.services.TimerList
-import java.sql.Time
 import java.util.*
 
 class AddActivity: AppCompatActivity() {
@@ -36,6 +35,7 @@ class AddActivity: AppCompatActivity() {
     fun cancelAdd(view: View) {
         val mainIntent = Intent(this, MainActivity::class.java)
         startActivity(mainIntent)
+        setResult(0)
         finish()
     }
 
@@ -50,6 +50,7 @@ class AddActivity: AppCompatActivity() {
         if(validateMed(name, doseFreq, dosePeriod, doseSize, refillSize)) {
             Log.d("Dir", "${this.filesDir}")
             TimerList.data.addTimer(makeTimer(), this)
+            setResult(1)
             finish()
         } else {
             Toast.makeText(this, "Invalid data entered please ensure all data is " +
@@ -103,8 +104,8 @@ class AddActivity: AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun makeTimer(): Timer {
-        val newMed = Medication(name, refillSize, refillSize, refillRemaining, true,
-                doseFreq, dosePeriod, doseSize, withFood, doseUnit)
+        val newMed = Medication(name, refillSize, refillSize, refillRemaining, doseFreq,
+                dosePeriod, doseSize, withFood, doseUnit, true)
 
         val calendar = Calendar.getInstance()
         calendar.set(doseDate.year, doseDate.month, doseDate.dayOfMonth,

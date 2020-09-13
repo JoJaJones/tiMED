@@ -9,7 +9,7 @@ import java.io.File
 
 @RequiresApi(Build.VERSION_CODES.O)
 class TimerData {
-    var timerData : ArrayList<Timer>?;
+    var timerData : ArrayList<Timer>;
     val fileName = "timers.json"
     private val jsonReader = MedJsonReader();
 
@@ -17,25 +17,30 @@ class TimerData {
         timerData = ArrayList()
     }
 
-    fun getTimers() : ArrayList<Timer>? {
+    fun getTimers() : ArrayList<Timer> {
         return timerData;
     }
 
     fun getTimer(position: Int): Timer? {
-        return timerData?.get(position)
+        return timerData.get(position)
     }
 
     fun loadTimers(context: Context){
-        timerData = jsonReader.read(File(context.filesDir, fileName))
+        timerData = jsonReader.read(File(context.filesDir, fileName)) ?: ArrayList()
     }
 
     fun addTimer(timer: Timer, context: Context) {
-        timerData?.add(timer);
+        timerData.add(timer);
         jsonReader.write(timerData, File(context.filesDir, fileName));
     }
 
     fun deleteTimer(timer : Timer, context: Context) {
-        timerData = timerData?.filter() { it != timer } as ArrayList<Timer>;
+        timerData = timerData.filter() { it != timer } as ArrayList<Timer>;
+        jsonReader.write(timerData, File(context.filesDir, fileName));
+    }
+
+    fun deleteTimer(position: Int, context: Context) {
+        timerData.removeAt(position)
         jsonReader.write(timerData, File(context.filesDir, fileName));
     }
 }

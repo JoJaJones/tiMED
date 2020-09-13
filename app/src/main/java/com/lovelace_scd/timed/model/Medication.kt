@@ -2,13 +2,11 @@ package com.lovelace_scd.timed.model
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.lovelace_scd.timed.model.Timer
-import com.lovelace_scd.timed.model.TimerData
 import java.util.*
 
 open class Medication(var name: String, var rxFullSize: Double, var amountRemaining: Double,
-                      var numRefillsRemaining: Int, var isRefillable: Boolean, var dosesPerTimePeriod: Int,
-                      var daysPerTimePeriod: Int, var doseSize: Double, var takeWithFood: Boolean, var doseUnit: String) {
+                      var numRefillsRemaining: Int, var dosesPerTimePeriod: Int, var daysPerTimePeriod: Int,
+                      var doseSize: Double, var takeWithFood: Boolean, var doseUnit: String, var isRefillable: Boolean = true) {
 
     @RequiresApi(Build.VERSION_CODES.O)
 //    val timerData: TimerData = TimerData()

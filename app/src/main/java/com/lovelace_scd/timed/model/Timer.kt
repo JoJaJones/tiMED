@@ -18,6 +18,7 @@ const val millisecondsPerDay = 24 * 60 * 60 * 1000;
 const val millisecondsPerMinute = 60 * 1000;
 const val millisecondsPerSecond = 1000;
 
+@RequiresApi(Build.VERSION_CODES.O)
 class Timer {
 
     lateinit var countingTimer : CountDownTimer;
@@ -33,7 +34,6 @@ class Timer {
     var skipNextDose: Boolean;
     var nextDoseReady: Boolean;
 
-    @RequiresApi(Build.VERSION_CODES.O)
     constructor(medication: Medication, date: Date, skipNextDose: Boolean = false, nextDoseReady: Boolean = false) {
 
         this.medication = medication;
@@ -43,7 +43,7 @@ class Timer {
         this.baseDate = date.toInstant().toEpochMilli();
         startTimer();
     }
-    @RequiresApi(Build.VERSION_CODES.O)
+
     constructor(medication: Medication, baseDate: Long, skipNextDose: Boolean = false, nextDoseReady: Boolean = false) {
 
         this.medication = medication;
@@ -54,8 +54,6 @@ class Timer {
         startTimer();
     }
 
-
-    @RequiresApi(Build.VERSION_CODES.O)
     fun startTimer() {
 
         var now = Date().toInstant().toEpochMilli();
@@ -68,7 +66,10 @@ class Timer {
         countingTimer = CountingTimer(this, millisecondsToNextDose);
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    fun calculateTimeRemaining(): Long {
+        return baseDate - Date().toInstant().toEpochMilli()
+    }
+
     fun restartTimer() {
         startTimer();
     }
