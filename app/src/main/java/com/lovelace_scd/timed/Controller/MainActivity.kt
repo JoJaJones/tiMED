@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lovelace_scd.timed.Adaptors.TimerAdaptor
 import com.lovelace_scd.timed.R
-import com.lovelace_scd.timed.Util.CHANNEL_ID
 import com.lovelace_scd.timed.services.TimerList
+import com.lovelace_scd.timed.util.CHANNEL_ID
 
 
 @RequiresApi(Build.VERSION_CODES.O)
