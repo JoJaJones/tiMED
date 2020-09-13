@@ -153,6 +153,7 @@ class CountingTimer : CountDownTimer{
         timer.nextDoseDue = p0;
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onFinish() {
         if (!timer.skipNextDose) {
             timer.nextDoseReady = true;
