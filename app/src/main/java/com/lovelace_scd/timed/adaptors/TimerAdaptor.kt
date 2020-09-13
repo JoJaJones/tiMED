@@ -37,17 +37,17 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
     }
 
     inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener{
-        lateinit var timer: Timer
-        lateinit var countdown: CountDownTimer
-        var foodCountdown: CountDownTimer? = null
-        val medName: TextView? = itemView.findViewById(R.id.medName)
-        var deleteMedBtn: ImageButton? = itemView.findViewById(R.id.delButton)
-        var takeMedBtn: ImageButton? = itemView.findViewById(R.id.takeBtn)
-        var skipDoseBtn: ImageButton? = itemView.findViewById(R.id.skipBtn)
-        var delayDoseBtn: ImageButton? = itemView.findViewById(R.id.delayBtn)
-        var refillBtn: Button? = itemView.findViewById(R.id.refillBtn)
-        var medTimerText: TextView? = itemView.findViewById(R.id.medTimer)
-        var refillsRemaining: TextInputEditText? = itemView.findViewById(R.id.refillsRemainingField)
+        private lateinit var timer: Timer
+        private lateinit var countdown: CountDownTimer
+        private var foodCountdown: CountDownTimer? = null
+        private val medName: TextView? = itemView.findViewById(R.id.medName)
+        private var deleteMedBtn: ImageButton? = itemView.findViewById(R.id.delButton)
+        private var takeMedBtn: ImageButton? = itemView.findViewById(R.id.takeBtn)
+        private var skipDoseBtn: ImageButton? = itemView.findViewById(R.id.skipBtn)
+        private var delayDoseBtn: ImageButton? = itemView.findViewById(R.id.delayBtn)
+        private var refillBtn: Button? = itemView.findViewById(R.id.refillBtn)
+        private var medTimerText: TextView? = itemView.findViewById(R.id.medTimer)
+        private var refillsRemaining: TextInputEditText? = itemView.findViewById(R.id.refillsRemainingField)
 
         /*******************************************************************************************
          * bind the relevant UI elements to the current list item
@@ -122,11 +122,10 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
             }
             else if (view == refillBtn) {
                 refillMed(timer, refillsRemaining)
-            }
-            else {
+            } else {
                 // generate a pop up message if the user clicks on the timer without touching any
                 // of the buttons
-                var daysToRefillNeeded: Double = timer.medication.amountRemaining /
+                val daysToRefillNeeded: Double = timer.medication.amountRemaining /
                         timer.medication.doseSize *
                         timer.medication.daysPerTimePeriod.toDouble() /
                         timer.medication.dosesPerTimePeriod.toDouble()
@@ -218,7 +217,7 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
      * remaining
      ******************************************************************************************/
     fun refillMed(timer: Timer, refillsRemaining: TextInputEditText?){
-        var numRefills = refillsRemaining?.text.toString().toInt()
+        val numRefills = refillsRemaining?.text.toString().toInt()
         try{
             timer.refillMed(numRefills)
             refillsRemaining?.setText(timer.medication.numRefillsRemaining.toString())
@@ -232,13 +231,13 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
 /*******************************************************************************************
  * Countdown class to format the time until the next dose is due in DD:HH:MM:SS format
  ******************************************************************************************/
-class DisplayCountdown(val view: TextView?, val timer: Timer, val context: Context, val id: Int,
+class DisplayCountdown(private val view: TextView?, private val timer: Timer, private val context: Context, private val id: Int,
                        time: Long,
                        msPerSec: Long) : CountDownTimer(time, msPerSec) {
-    var seconds = 0L
-    var mins = 0L
-    var hours = 0L
-    var days = 0L
+    private var seconds = 0L
+    private var mins = 0L
+    private var hours = 0L
+    private var days = 0L
 
     /*******************************************************************************************
      * Function to take the raw time in milliseconds and calculate the formatted time until the
@@ -255,25 +254,30 @@ class DisplayCountdown(val view: TextView?, val timer: Timer, val context: Conte
         days = hours / 24
         hours %= 24
 
-        var displayString = ""
-        if(days > 0) {
-            displayString = "%02d:%02d:%02d:%02d".format(days, hours, mins, seconds)
-        } else if( hours > 0) {
-            displayString = "%02d:%02d:%02d".format(hours, mins, seconds)
-        } else if (mins > 0) {
-            displayString = "%02d:%02d".format(mins, seconds)
-        } else if (seconds > 0) {
-            displayString = "%02d".format(seconds)
-        } else {
-            displayString = "Now!"
+        val displayString = when {
+            days > 0 -> {
+                "%02d:%02d:%02d:%02d".format(days, hours, mins, seconds)
+            }
+            hours > 0 -> {
+                "%02d:%02d:%02d".format(hours, mins, seconds)
+            }
+            mins > 0 -> {
+                "%02d:%02d".format(mins, seconds)
+            }
+            seconds > 0 -> {
+                "%02d".format(seconds)
+            }
+            else -> {
+                "Now!"
+            }
         }
 
         view?.text = displayString
     }
 
     override fun onFinish() {
-        view?.text = "Now!"
-        var builder = NotificationCompat.Builder(context, CHANNEL_ID)
+        view?.text = context.getString(R.string.timerFinishText)
+        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.pill_clipart)
                 .setContentTitle("Medication Reminder")
                 .setContentText("It's time to take ${timer.medication.name}.")
@@ -288,13 +292,14 @@ class DisplayCountdown(val view: TextView?, val timer: Timer, val context: Conte
     }
 }
 
-class FoodCountdown(val timer: Timer, var context: Context, val id: Int, var timeRemaining: Long,): CountDownTimer(timeRemaining, 1000L) {
+class FoodCountdown(private val timer: Timer, private var context: Context, private val id: Int, private var timeRemaining: Long) : CountDownTimer(timeRemaining, 1000L) {
+
     override fun onTick(millisUntilFinished: Long) {
 
     }
 
     override fun onFinish() {
-        var builder = NotificationCompat.Builder(context, CHANNEL_ID)
+        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.pill_clipart)
                 .setContentTitle("Meal Reminder")
                 .setContentText("It's time to eat for ${timer.medication.name}, dose scheduled for 30 min from now.")

@@ -18,26 +18,26 @@ import com.lovelace_scd.timed.model.Timer
 import java.io.File
 
 
-class MedJsonReader(val filename: String = "src/main/java/com/lovelace_scd/timed/io/sample.json") {
-    val klaxon = Klaxon();
+class MedJsonReader {
+    private val klaxon = Klaxon()
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun write(timers: ArrayList<Timer>?, saveFile: File) {
-        val json = medTimersToJson(timers);
+        val json = medTimersToJson(timers)
 
-        saveFile.writeText("{ \"timers\": " + json.toJsonString() + " }\n");
+        saveFile.writeText("{ \"timers\": " + json.toJsonString() + " }\n")
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun read(saveFile: File): ArrayList<Timer>? {
-        try {
-            val fileAsString = saveFile.readText();
-            val res = klaxon.parse<Map<String, JsonArray<JsonObject>>>(fileAsString);
+        return try {
+            val fileAsString = saveFile.readText()
+            val res = klaxon.parse<Map<String, JsonArray<JsonObject>>>(fileAsString)
 
-            return medJsonToTimers(res!!["timers"]);
+            medJsonToTimers(res!!["timers"])
         } catch(err : Throwable) {
-            print(err);
-            return ArrayList<Timer>();
+            print(err)
+            ArrayList()
         }
     }
 
@@ -47,16 +47,16 @@ class MedJsonReader(val filename: String = "src/main/java/com/lovelace_scd/timed
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun medTimersToJson(timers: ArrayList<Timer>?): JsonArray<JsonObject> {
-        val jsonArr = JsonArray<JsonObject>();
+        val jsonArr = JsonArray<JsonObject>()
         timers?.forEach {
             jsonArr.add(JsonObject(it.toMap()))
         }
-        return jsonArr;
+        return jsonArr
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun medJsonToTimers(medJsonTransfer: JsonArray<JsonObject>?): ArrayList<Timer> {
-        val timers = ArrayList<Timer>();
+        val timers = ArrayList<Timer>()
 
         if (medJsonTransfer != null) {
             for (tim in medJsonTransfer) {
@@ -71,10 +71,10 @@ class MedJsonReader(val filename: String = "src/main/java/com/lovelace_scd/timed
                         tim["takeWithFood"] as Boolean,
                         tim["doseUnit"] as String,
                         tim["isRefillable"] as Boolean,
-                );
-                timers.add(Timer(med, (tim["baseDate"] as Long), tim["skipNextDose"] as Boolean));
+                )
+                timers.add(Timer(med, (tim["baseDate"] as Long), tim["skipNextDose"] as Boolean))
             }
         }
-        return timers;
+        return timers
     }
 }

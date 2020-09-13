@@ -11,4 +11,5 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="channel_name">Med Timer Alerts</string>
     <string name="channel_description">Alert channel for the timers of the app</string>
+    <string name="timerFinishText">Now!</string>
 </resources>
