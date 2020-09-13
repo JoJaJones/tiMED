@@ -26,11 +26,6 @@ class MedJsonReader(val filename: String = "src/main/java/com/lovelace_scd/timed
         val json = medTimersToJson(timers);
 
         saveFile.writeText("{ \"timers\": " + json.toJsonString() + " }\n");
-//        val logic = json {
-//            array(timers).map {
-//                obj(it.toString() to it);
-//            }
-//        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -44,7 +39,6 @@ class MedJsonReader(val filename: String = "src/main/java/com/lovelace_scd/timed
             print(err);
             return ArrayList<Timer>();
         }
-//        return medJsonToTimers(res!!["timers"]);
     }
 
     fun deleteFile(file: File) {

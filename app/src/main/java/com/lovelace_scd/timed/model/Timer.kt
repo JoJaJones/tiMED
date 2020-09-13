@@ -9,15 +9,13 @@ package com.lovelace_scd.timed.model
 import android.os.Build
 import android.os.CountDownTimer
 import androidx.annotation.RequiresApi
+import com.lovelace_scd.timed.util.MS_PER_DAY
+import com.lovelace_scd.timed.util.MS_PER_HOUR
+import com.lovelace_scd.timed.util.MS_PER_SECOND
 import java.lang.Exception
 //import com.lovelace_scd.timed.model.Medication
 import java.util.*
 
-
-const val millisecondsPerDay = 24 * 60 * 60 * 1000;
-const val millisecondsPerHour = 60 * 60 * 1000;
-const val millisecondsPerMinute = 60 * 1000;
-const val millisecondsPerSecond = 1000;
 
 @RequiresApi(Build.VERSION_CODES.O)
 class Timer {
@@ -60,10 +58,10 @@ class Timer {
     fun startTimer() {
 
         var now = Date().toInstant().toEpochMilli();
-        var timerAdjustment = (now - nextDoseDue) % millisecondsPerDay;
+        var timerAdjustment = (now - nextDoseDue) % MS_PER_DAY;
 
 
-        nextDoseDue = ((medication.daysPerTimePeriod.toDouble() / medication.dosesPerTimePeriod.toDouble() ) * millisecondsPerDay).toLong() - timerAdjustment;
+        nextDoseDue = ((medication.daysPerTimePeriod.toDouble() / medication.dosesPerTimePeriod.toDouble() ) * MS_PER_DAY).toLong() - timerAdjustment;
         nextDoseDueAdjusted = 0;
 
         countingTimer = CountingTimer(this, nextDoseDue);
@@ -78,7 +76,7 @@ class Timer {
     }
 
     fun getSecondsToNextDose(): Long {
-        return nextDoseDue / millisecondsPerSecond;
+        return nextDoseDue / MS_PER_SECOND;
     }
 
     fun skipNextDose() {
@@ -86,7 +84,7 @@ class Timer {
     }
 
     fun markTaken() {
-        if(calculateTimeRemaining() < millisecondsPerHour/4 && medication.amountRemaining > 0){
+        if(calculateTimeRemaining() < MS_PER_HOUR /4 && medication.amountRemaining > 0){
             nextDoseReady = true
             medication.takeMed();
             calculateNextDoseTime()
@@ -108,12 +106,12 @@ class Timer {
     fun calculateNextDoseTime(){
         this.nextDoseDue += ((medication.daysPerTimePeriod.toDouble() /
                             medication.dosesPerTimePeriod.toDouble() ) *
-                            millisecondsPerDay).toLong()
+                            MS_PER_DAY).toLong()
         if(this.nextDoseDue < Date().toInstant().toEpochMilli()) {
             this.nextDoseDue = Date().toInstant().toEpochMilli() +
                                ((medication.daysPerTimePeriod.toDouble() /
                                medication.dosesPerTimePeriod.toDouble() ) *
-                               millisecondsPerDay).toLong()
+                               MS_PER_DAY).toLong()
         }
         this.nextDoseDueAdjusted = nextDoseDue
     }
@@ -157,7 +155,7 @@ class CountingTimer : CountDownTimer{
     val timer : Timer; // Reference so we can call notify, or something similar.
 
     constructor(timer: Timer, milliseconds: Long) :
-        super(milliseconds, millisecondsPerSecond.toLong()) {
+        super(milliseconds, MS_PER_SECOND.toLong()) {
         this.timer = timer;
 
     }

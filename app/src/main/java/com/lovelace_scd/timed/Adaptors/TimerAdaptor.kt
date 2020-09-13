@@ -16,10 +16,9 @@ import com.lovelace_scd.timed.R
 import com.lovelace_scd.timed.util.CHANNEL_ID
 import com.lovelace_scd.timed.model.Timer
 import com.lovelace_scd.timed.model.TimerData
+import com.lovelace_scd.timed.util.DELAY_AMOUNT
+import com.lovelace_scd.timed.util.MS_PER_30_MIN
 import java.lang.Exception
-
-const val DELAY_AMOUNT = 10 * 60 //10 min snooze
-const val MILLS_PER_30_MIN = 30L*60L*1000L
 
 @RequiresApi(Build.VERSION_CODES.O)
 class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.Adapter<TimerAdaptor.Holder>() {
@@ -68,7 +67,7 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
             refillsRemaining?.setText(timer.medication.numRefillsRemaining.toString())
 
             if(timer.medication.takeWithFood){
-                foodCountdown = FoodCountdown(timer, context, notificationNumber++, timer.calculateTimeRemaining()- MILLS_PER_30_MIN).start()
+                foodCountdown = FoodCountdown(timer, context, notificationNumber++, timer.calculateTimeRemaining()- MS_PER_30_MIN).start()
             }
         }
 
@@ -172,7 +171,7 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
         }
         return if(foodTimer) {
             FoodCountdown(timer, context, notificationNumber++,
-                    timer.calculateTimeRemaining() - (MILLS_PER_30_MIN))
+                    timer.calculateTimeRemaining() - (MS_PER_30_MIN))
         } else {
             DisplayCountdown(view, timer, context, notificationNumber++, timer.calculateTimeRemaining(), 1000L)
         }
@@ -184,10 +183,10 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
     fun delayDose(timer: Timer, view: TextView?, foodTimer: Boolean = false)
             : CountDownTimer{
 
-        timer.adjustNextDoseTime(DELAY_AMOUNT*1000L)
+        timer.adjustNextDoseTime(DELAY_AMOUNT *1000L)
         return if(foodTimer) {
             FoodCountdown(timer, context, notificationNumber++,
-                    timer.calculateTimeRemaining() - (MILLS_PER_30_MIN))
+                    timer.calculateTimeRemaining() - (MS_PER_30_MIN))
         } else {
             DisplayCountdown(view, timer, context, notificationNumber++, timer.calculateTimeRemaining(), 1000L)
         }
@@ -203,7 +202,7 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
         
         return if(foodTimer) {
             FoodCountdown(timer, context, notificationNumber++, 
-                    timer.calculateTimeRemaining() - (MILLS_PER_30_MIN))   
+                    timer.calculateTimeRemaining() - (MS_PER_30_MIN))
         } else {
             DisplayCountdown(view, timer, context, notificationNumber++, timer.calculateTimeRemaining(), 1000L)
         }
