@@ -10,7 +10,8 @@ import java.io.File
 @RequiresApi(Build.VERSION_CODES.O)
 class TimerData {
     var timerData : ArrayList<Timer>;
-    val fileName = "timers.json"
+//    val fileName = "sample.json";
+        val fileName = "timers.json"
     private val jsonReader = MedJsonReader();
 
     constructor () {

@@ -21,6 +21,7 @@ import java.io.File
 class MedJsonReader(val filename: String = "src/main/java/com/lovelace_scd/timed/io/sample.json") {
     val klaxon = Klaxon();
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun write(timers: ArrayList<Timer>?, saveFile: File) {
         val json = medTimersToJson(timers);
 
@@ -34,14 +35,19 @@ class MedJsonReader(val filename: String = "src/main/java/com/lovelace_scd/timed
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun read(saveFile: File): ArrayList<Timer>? {
-        // Klaxon doesn't seem to allow a top level json array...so this is a jenky workaround.
-        val fileAsString = saveFile.readText();
-        val res = klaxon.parse<Map<String, JsonArray<JsonObject>>>(fileAsString);
+        try {
+            val fileAsString = saveFile.readText();
+            val res = klaxon.parse<Map<String, JsonArray<JsonObject>>>(fileAsString);
 
-        return medJsonToTimers(res!!["timers"]);
+            return medJsonToTimers(res!!["timers"]);
+        } catch(err : Throwable) {
+            print(err);
+            return ArrayList<Timer>();
+        }
 //        return medJsonToTimers(res!!["timers"]);
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun medTimersToJson(timers: ArrayList<Timer>?): JsonArray<JsonObject> {
         val jsonArr = JsonArray<JsonObject>();
         timers?.forEach {
