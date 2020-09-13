@@ -72,7 +72,7 @@ class MedJsonReader(val filename: String = "src/main/java/com/lovelace_scd/timed
                         tim["doseUnit"] as String,
                         tim["isRefillable"] as Boolean,
                 );
-                timers.add(Timer(med, (tim["baseDate"] as Long), tim["skipNextDose"] as Boolean, tim["nextDoseReady"] as Boolean));
+                timers.add(Timer(med, (tim["baseDate"] as Long), tim["skipNextDose"] as Boolean));
             }
         }
         return timers;

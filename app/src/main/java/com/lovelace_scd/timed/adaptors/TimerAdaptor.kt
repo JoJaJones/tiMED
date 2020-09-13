@@ -77,68 +77,66 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
          ******************************************************************************************/
         override fun onClick(view: View){
             var flag = true
-            when (view) {
-                deleteMedBtn -> {
-                    removeTimer(adapterPosition)
-                    countdown.cancel()
+            if (view == deleteMedBtn) {
+                removeTimer(adapterPosition)
+                countdown.cancel()
 
-                    if(timer.medication.takeWithFood){
-                        foodCountdown?.cancel()
-                    }
+                if(timer.medication.takeWithFood){
+                    foodCountdown?.cancel()
+                }
 
-                    flag = false
-                }
-                takeMedBtn -> {
-                    countdown.cancel()
-                    countdown = takeDose(timer, medTimerText)
-                    countdown.start()
+                flag = false
+            }
+            else if (view == takeMedBtn) {
+                countdown.cancel()
+                countdown = takeDose(timer, medTimerText)
+                countdown.start()
 
-                    if(timer.medication.takeWithFood){
-                        foodCountdown?.cancel()
-                        foodCountdown = takeDose(timer, medTimerText, true)
-                        foodCountdown?.start()
-                    }
+                if(timer.medication.takeWithFood){
+                    foodCountdown?.cancel()
+                    foodCountdown = takeDose(timer, medTimerText, true)
+                    foodCountdown?.start()
                 }
-                skipDoseBtn -> {
-                    countdown.cancel()
-                    countdown = skipDose(timer, medTimerText)
-                    countdown.start()
+            }
+            else if (view == skipDoseBtn) {
+                countdown.cancel()
+                countdown = skipDose(timer, medTimerText)
+                countdown.start()
 
-                    if(timer.medication.takeWithFood){
-                        foodCountdown?.cancel()
-                        foodCountdown = takeDose(timer, medTimerText, true)
-                        foodCountdown?.start()
-                    }
+                if(timer.medication.takeWithFood){
+                    foodCountdown?.cancel()
+                    foodCountdown = takeDose(timer, medTimerText, true)
+                    foodCountdown?.start()
                 }
-                delayDoseBtn -> {
-                    countdown.cancel()
-                    countdown = delayDose(timer, medTimerText)
-                    countdown.start()
+            }
+            else if (view == delayDoseBtn) {
+                countdown.cancel()
+                countdown = delayDose(timer, medTimerText)
+                countdown.start()
 
-                    if(timer.medication.takeWithFood){
-                        foodCountdown?.cancel()
-                        foodCountdown = takeDose(timer, medTimerText, true)
-                        foodCountdown?.start()
-                    }
+                if(timer.medication.takeWithFood){
+                    foodCountdown?.cancel()
+                    foodCountdown = takeDose(timer, medTimerText, true)
+                    foodCountdown?.start()
                 }
-                refillBtn -> {
-                    refillMed(timer, refillsRemaining)
-                }
-                else -> {
-                    // generate a pop up message if the user clicks on the timer without touching any
-                    // of the buttons
-                    var daysToRefillNeeded: Double = timer.medication.amountRemaining /
-                            timer.medication.doseSize *
-                            timer.medication.daysPerTimePeriod.toDouble() /
-                            timer.medication.dosesPerTimePeriod.toDouble()
-    
-                    val toastDoseUnit = if (timer.medication.doseUnit == "N/A") "" else timer.medication.doseUnit + "s "
-                    Toast.makeText(context, "${timer.medication.name}: you have " +
-                            "${timer.medication.amountRemaining} ${toastDoseUnit}left. " +
-                            "You need a refill in ${daysToRefillNeeded.toInt()} days",
-                            Toast.LENGTH_SHORT).show()
-                    flag = false
-                }
+            }
+            else if (view == refillBtn) {
+                refillMed(timer, refillsRemaining)
+            }
+            else {
+                // generate a pop up message if the user clicks on the timer without touching any
+                // of the buttons
+                var daysToRefillNeeded: Double = timer.medication.amountRemaining /
+                        timer.medication.doseSize *
+                        timer.medication.daysPerTimePeriod.toDouble() /
+                        timer.medication.dosesPerTimePeriod.toDouble()
+
+                val toastDoseUnit = if (timer.medication.doseUnit == "N/A") "" else timer.medication.doseUnit + "s "
+                Toast.makeText(context, "${timer.medication.name}: you have " +
+                        "${timer.medication.amountRemaining} ${toastDoseUnit}left. " +
+                        "You need a refill in ${daysToRefillNeeded.toInt()} days",
+                        Toast.LENGTH_SHORT).show()
+                flag = false
             }
             
             if(flag) {
@@ -169,6 +167,7 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
 
             Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
         }
+
         return if(foodTimer) {
             FoodCountdown(timer, context, notificationNumber++,
                     timer.calculateTimeRemaining() - (MS_PER_30_MIN))
@@ -183,7 +182,8 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
     fun delayDose(timer: Timer, view: TextView?, foodTimer: Boolean = false)
             : CountDownTimer{
 
-        timer.adjustNextDoseTime(DELAY_AMOUNT *1000L)
+
+        timer.adjustNextDoseTime(DELAY_AMOUNT)
         return if(foodTimer) {
             FoodCountdown(timer, context, notificationNumber++,
                     timer.calculateTimeRemaining() - (MS_PER_30_MIN))
@@ -198,8 +198,12 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
      ******************************************************************************************/
     fun skipDose(timer: Timer, view: TextView?, foodTimer: Boolean = false)
             : CountDownTimer{
-        timer.skipNextDose()
-        
+        try {
+            timer.skipNextDose()
+        } catch (e: Exception) {
+
+            Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
+        }
         return if(foodTimer) {
             FoodCountdown(timer, context, notificationNumber++, 
                     timer.calculateTimeRemaining() - (MS_PER_30_MIN))

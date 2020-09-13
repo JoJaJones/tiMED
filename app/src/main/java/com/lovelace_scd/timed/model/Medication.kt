@@ -20,7 +20,7 @@ open class Medication(var name: String, var rxFullSize: Double, var amountRemain
         prevDoseTime()
     }
 
-    fun isRefillReady(): Boolean {
+    private fun isRefillReady(): Boolean {
         return amountRemaining <= ceil(rxFullSize / 4)
     }
 
@@ -40,9 +40,6 @@ open class Medication(var name: String, var rxFullSize: Double, var amountRemain
         } else {
             throw Exception("not ready for refilling yet")
         }
-
-
-
     }
 
     fun prevDoseTime(){
@@ -56,12 +53,12 @@ open class Medication(var name: String, var rxFullSize: Double, var amountRemain
         map["rxFullSize"] = rxFullSize;
         map["amountRemaining"] = amountRemaining;
         map["numRefillsRemaining"] = numRefillsRemaining;
-        map["isRefillable"] = isRefillable;
         map["dosesPerTimePeriod"] = dosesPerTimePeriod;
         map["daysPerTimePeriod"] = daysPerTimePeriod;
         map["doseSize"] = doseSize;
         map["takeWithFood"] = takeWithFood;
         map["doseUnit"] = doseUnit;
+        map["isRefillable"] = isRefillable;
 
         return map;
     }
