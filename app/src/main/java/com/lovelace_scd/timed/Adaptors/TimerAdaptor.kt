@@ -272,8 +272,8 @@ class DisplayCountdown(val view: TextView?, val timer: Timer, val context: Conte
         view?.text = "Now!"
         var builder = NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.pill_clipart)
-                .setContentTitle(timer.medication.name)
-                .setContentText("Take ${timer.medication.name}")
+                .setContentTitle("Medication Reminder")
+                .setContentText("It's time to take ${timer.medication.name}.")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setCategory(NotificationCompat.CATEGORY_REMINDER)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
@@ -293,8 +293,8 @@ class FoodCountdown(val timer: Timer, var context: Context, val id: Int, var tim
     override fun onFinish() {
         var builder = NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.pill_clipart)
-                .setContentTitle(timer.medication.name)
-                .setContentText("Eat food so you can take ${timer.medication.name} in 30 min")
+                .setContentTitle("Meal Reminder")
+                .setContentText("It's time to eat for ${timer.medication.name}, dose scheduled for 30 min from now.")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setCategory(NotificationCompat.CATEGORY_REMINDER)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
