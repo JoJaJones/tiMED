@@ -1,29 +1,35 @@
 package com.lovelace_scd.timed.Adaptors
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
+import android.content.Context.NOTIFICATION_SERVICE
 import android.os.Build
 import android.os.CountDownTimer
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.Button
+import android.widget.ImageButton
+import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
 import com.lovelace_scd.timed.R
-import com.lovelace_scd.timed.model.TestTimer
+import com.lovelace_scd.timed.model.Medication
 import com.lovelace_scd.timed.model.Timer
 import com.lovelace_scd.timed.model.TimerData
-import com.lovelace_scd.timed.test_code.Test
-import java.lang.Exception
-import java.util.*
-import java.util.concurrent.CountDownLatch
+
 
 const val DELAY_AMOUNT = 10 * 60 //10 min snooze
 
 @RequiresApi(Build.VERSION_CODES.O)
 class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.Adapter<TimerAdaptor.Holder>() {
+
     override fun onCreateViewHolder(parent: ViewGroup, position: Int): Holder {
         val view = LayoutInflater.from(context).inflate(R.layout.timer_list_item, parent, false)
         return Holder(view)
@@ -37,7 +43,7 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
         holder.bindTimer(timers.timerData[position], context)
     }
 
-    inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener{
+    inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         lateinit var timer: Timer
         lateinit var countdown: CountDownTimer
         val medName: TextView? = itemView.findViewById(R.id.medName)
@@ -52,10 +58,10 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
         /*******************************************************************************************
          * bind the relevant UI elements to the current list item
          ******************************************************************************************/
-        fun bindTimer(timer: Timer, context: Context){
+        fun bindTimer(timer: Timer, context: Context) {
             this.timer = timer
             itemView.setOnClickListener(this)
-            countdown = DisplayCountdown(medTimerText, timer.calculateTimeRemaining(), 1000L).start()
+            countdown = DisplayCountdown(medTimerText, timer.calculateTimeRemaining(), 1000L, context, timer.medication).start()
             medName?.text = timer.medication.name
             deleteMedBtn?.setOnClickListener(this)
             takeMedBtn?.setOnClickListener(this)
@@ -69,37 +75,37 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
          * Override for the onClick method to direct the various UI elements that are clickable to
          * the appropriate function to implement their intended behaviors
          ******************************************************************************************/
-        override fun onClick(view: View){
+        override fun onClick(view: View) {
             if (view == deleteMedBtn) {
                 removeTimer(adapterPosition)
                 countdown.cancel()
-            } else if (view == takeMedBtn){
+            } else if (view == takeMedBtn) {
                 countdown.cancel()
                 countdown = takeDose(countdown, timer, medTimerText)
                 countdown.start()
                 timers.updateTimers(context)
 
-            } else if (view == skipDoseBtn){
+            } else if (view == skipDoseBtn) {
                 countdown.cancel()
                 countdown = skipDose(countdown, timer, medTimerText)
                 countdown.start()
                 timers.updateTimers(context)
 
-            } else if (view == delayDoseBtn){
+            } else if (view == delayDoseBtn) {
                 countdown.cancel()
                 countdown = delayDose(countdown, timer, medTimerText)
                 countdown.start()
                 timers.updateTimers(context)
 
-            } else if (view == refillBtn){
+            } else if (view == refillBtn) {
                 refillMed(timer, refillsRemaining)
             } else {
                 // generate a pop up message if the user clicks on the timer without touching any
                 // of the buttons
                 var daysToRefillNeeded: Double = timer.medication.amountRemaining /
-                                                 timer.medication.doseSize *
-                                                 timer.medication.daysPerTimePeriod.toDouble() /
-                                                 timer.medication.dosesPerTimePeriod.toDouble()
+                        timer.medication.doseSize *
+                        timer.medication.daysPerTimePeriod.toDouble() /
+                        timer.medication.dosesPerTimePeriod.toDouble()
 
                 Toast.makeText(context, "${timer.medication.name}: you have " +
                         "${timer.medication.amountRemaining} ${timer.medication.doseUnit}s left. " +
@@ -113,7 +119,7 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
      * Function to remove one of the timers from the dataset and update the UI to reflect its
      * removal
      ******************************************************************************************/
-    fun removeTimer(position: Int){
+    fun removeTimer(position: Int) {
         timers.deleteTimer(position, context)
         notifyItemRemoved(position)
         notifyItemRangeChanged(position, timers.timerData.size)
@@ -124,24 +130,24 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
      * cause relevant data changes to the Medication and Timer objects
      ******************************************************************************************/
     fun takeDose(countdown: CountDownTimer, timer: Timer, view: TextView?)
-            : CountDownTimer{
+            : CountDownTimer {
         try {
             timer.markTaken()
         } catch (e: Exception) {
 
             Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
         }
-        return DisplayCountdown(view, timer.calculateTimeRemaining(), 1000L)
+        return DisplayCountdown(view, timer.calculateTimeRemaining(), 1000L, context, timer.medication)
     }
 
     /*******************************************************************************************
      * Function to delay the indicated medication's timer by 10 minutes
      ******************************************************************************************/
     fun delayDose(countdown: CountDownTimer, timer: Timer, view: TextView?)
-            : CountDownTimer{
+            : CountDownTimer {
 
-        timer.adjustNextDoseTime(DELAY_AMOUNT*1000L)
-        return DisplayCountdown(view, timer.calculateTimeRemaining(), 1000L)
+        timer.adjustNextDoseTime(DELAY_AMOUNT * 1000L)
+        return DisplayCountdown(view, timer.calculateTimeRemaining(), 1000L, context, timer.medication)
     }
 
     /*******************************************************************************************
@@ -149,9 +155,9 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
      * scheduled time
      ******************************************************************************************/
     fun skipDose(countdown: CountDownTimer, timer: Timer, view: TextView?)
-            : CountDownTimer{
+            : CountDownTimer {
         timer.skipNextDose()
-        return DisplayCountdown(view, timer.calculateTimeRemaining(), 1000L)
+        return DisplayCountdown(view, timer.calculateTimeRemaining(), 1000L, context, timer.medication)
     }
 
     /*******************************************************************************************
@@ -159,8 +165,8 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
      * data and UI to reflect the increased quantity of medication and reduced number of refills
      * remaining
      ******************************************************************************************/
-    fun refillMed(timer: Timer, refillsRemaining: TextInputEditText?){
-        try{
+    fun refillMed(timer: Timer, refillsRemaining: TextInputEditText?) {
+        try {
             timer.refillMed()
             refillsRemaining?.setText(timer.medication.numRefillsRemaining.toString())
         } catch (e: Exception) {
@@ -173,7 +179,7 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
 /*******************************************************************************************
  * Countdown class to format the time until the next dose is due in DD:HH:MM:SS format
  ******************************************************************************************/
-class DisplayCountdown (val view: TextView?, time: Long, msPerSec: Long) : CountDownTimer(time, msPerSec) {
+class DisplayCountdown(val view: TextView?, time: Long, msPerSec: Long, val context: Context, val medication: Medication) : CountDownTimer(time, msPerSec) {
     var seconds = 0L
     var mins = 0L
     var hours = 0L
@@ -195,9 +201,9 @@ class DisplayCountdown (val view: TextView?, time: Long, msPerSec: Long) : Count
         hours %= 24
 
         var displayString = ""
-        if(days > 0) {
+        if (days > 0) {
             displayString = "%02d:%02d:%02d:%02d".format(days, hours, mins, seconds)
-        } else if( hours > 0) {
+        } else if (hours > 0) {
             displayString = "%02d:%02d:%02d".format(hours, mins, seconds)
         } else if (mins > 0) {
             displayString = "%02d:%02d".format(mins, seconds)
@@ -210,7 +216,18 @@ class DisplayCountdown (val view: TextView?, time: Long, msPerSec: Long) : Count
         view?.text = displayString
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onFinish() {
         view?.text = "Now!"
+        var builder = NotificationCompat.Builder(context, "something about a channel")
+                .setSmallIcon(R.drawable.pill_clipart)
+                .setContentTitle("Medication Reminder")
+                .setContentText("It's time to take ${medication.name}")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+        with(NotificationManagerCompat.from(context)) {
+            // notificationId is a unique int for each notification that you must define
+            notify(1121, builder.build())
+        }
+
     }
 }
