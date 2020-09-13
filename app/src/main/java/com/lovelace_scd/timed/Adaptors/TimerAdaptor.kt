@@ -49,7 +49,9 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
         var medTimerText: TextView? = itemView.findViewById(R.id.medTimer)
         var refillsRemaining: TextInputEditText? = itemView.findViewById(R.id.refillsRemainingField)
 
-
+        /*******************************************************************************************
+         * bind the relevant UI elements to the current list item
+         ******************************************************************************************/
         fun bindTimer(timer: Timer, context: Context){
             this.timer = timer
             itemView.setOnClickListener(this)
@@ -61,9 +63,12 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
             delayDoseBtn?.setOnClickListener(this)
             refillBtn?.setOnClickListener(this)
             refillsRemaining?.setText(timer.medication.numRefillsRemaining.toString())
-
         }
 
+        /*******************************************************************************************
+         * Override for the onClick method to direct the various UI elements that are clickable to
+         * the appropriate function to implement their intended behaviors
+         ******************************************************************************************/
         override fun onClick(view: View){
             if (view == deleteMedBtn) {
                 removeTimer(adapterPosition)
@@ -73,21 +78,29 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
                 countdown = takeDose(countdown, timer, medTimerText)
                 countdown.start()
                 timers.updateTimers(context)
+
             } else if (view == skipDoseBtn){
                 countdown.cancel()
                 countdown = skipDose(countdown, timer, medTimerText)
                 countdown.start()
                 timers.updateTimers(context)
+
             } else if (view == delayDoseBtn){
                 countdown.cancel()
-                countdown = delayDose(DELAY_AMOUNT, countdown, timer, medTimerText)
+                countdown = delayDose(countdown, timer, medTimerText)
                 countdown.start()
                 timers.updateTimers(context)
+
             } else if (view == refillBtn){
                 refillMed(timer, refillsRemaining)
             } else {
-                var daysToRefillNeeded: Double = timer.medication.amountRemaining / timer.medication.doseSize
-                daysToRefillNeeded *= timer.medication.daysPerTimePeriod.toDouble()/timer.medication.dosesPerTimePeriod.toDouble()
+                // generate a pop up message if the user clicks on the timer without touching any
+                // of the buttons
+                var daysToRefillNeeded: Double = timer.medication.amountRemaining /
+                                                 timer.medication.doseSize *
+                                                 timer.medication.daysPerTimePeriod.toDouble() /
+                                                 timer.medication.dosesPerTimePeriod.toDouble()
+
                 Toast.makeText(context, "${timer.medication.name}: you have " +
                         "${timer.medication.amountRemaining} ${timer.medication.doseUnit}s left. " +
                         "You need a refill in ${daysToRefillNeeded.toInt()} days",
@@ -96,12 +109,20 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
         }
     }
 
+    /*******************************************************************************************
+     * Function to remove one of the timers from the dataset and update the UI to reflect its
+     * removal
+     ******************************************************************************************/
     fun removeTimer(position: Int){
         timers.deleteTimer(position, context)
         notifyItemRemoved(position)
         notifyItemRangeChanged(position, timers.timerData.size)
     }
 
+    /*******************************************************************************************
+     * Function to indicate that the user has taken a dose of the specified medication and
+     * cause relevant data changes to the Medication and Timer objects
+     ******************************************************************************************/
     fun takeDose(countdown: CountDownTimer, timer: Timer, view: TextView?)
             : CountDownTimer{
         try {
@@ -113,19 +134,31 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
         return DisplayCountdown(view, timer.calculateTimeRemaining(), 1000L)
     }
 
-    fun delayDose(delayAmount: Int, countdown: CountDownTimer, timer: Timer, view: TextView?)
+    /*******************************************************************************************
+     * Function to delay the indicated medication's timer by 10 minutes
+     ******************************************************************************************/
+    fun delayDose(countdown: CountDownTimer, timer: Timer, view: TextView?)
             : CountDownTimer{
 
-        timer.adjustNextDoseTime(delayAmount*1000L)
+        timer.adjustNextDoseTime(DELAY_AMOUNT*1000L)
         return DisplayCountdown(view, timer.calculateTimeRemaining(), 1000L)
     }
 
+    /*******************************************************************************************
+     * Function to skip the current dosage of the medication and adjust the timer to the next
+     * scheduled time
+     ******************************************************************************************/
     fun skipDose(countdown: CountDownTimer, timer: Timer, view: TextView?)
             : CountDownTimer{
         timer.skipNextDose()
         return DisplayCountdown(view, timer.calculateTimeRemaining(), 1000L)
     }
 
+    /*******************************************************************************************
+     * Function to indicate the user has refilled their prescription and update the Medication
+     * data and UI to reflect the increased quantity of medication and reduced number of refills
+     * remaining
+     ******************************************************************************************/
     fun refillMed(timer: Timer, refillsRemaining: TextInputEditText?){
         try{
             timer.refillMed()
@@ -137,12 +170,21 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
     }
 }
 
+/*******************************************************************************************
+ * Countdown class to format the time until the next dose is due in DD:HH:MM:SS format
+ ******************************************************************************************/
 class DisplayCountdown (val view: TextView?, time: Long, msPerSec: Long) : CountDownTimer(time, msPerSec) {
     var seconds = 0L
     var mins = 0L
     var hours = 0L
     var days = 0L
 
+    /*******************************************************************************************
+     * Function to take the raw time in milliseconds and calculate the formatted time until the
+     * dose needs to be taken
+     *
+     * Note: DateUtils.getRelativeTimeSpan might be an option to prevent issues with non 24hr days
+     ******************************************************************************************/
     override fun onTick(millisUntilFinished: Long) {
         seconds = millisUntilFinished / 1000
         mins = seconds / 60

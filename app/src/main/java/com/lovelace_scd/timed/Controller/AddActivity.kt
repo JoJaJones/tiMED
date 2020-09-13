@@ -15,8 +15,8 @@ import com.lovelace_scd.timed.model.Timer
 import com.lovelace_scd.timed.services.TimerList
 import java.util.*
 
+@RequiresApi(Build.VERSION_CODES.O)
 class AddActivity: AppCompatActivity() {
-    private val TAG = "ActivityLifeCycle(AA): "
     var name: String = ""
     var doseFreq: Int = -1
     var dosePeriod: Int = -1
@@ -27,11 +27,15 @@ class AddActivity: AppCompatActivity() {
     lateinit var doseDate: DatePicker
     var withFood: Boolean = false
     var doseUnit: String = "N/A"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.add_med_activity)
     }
 
+    /***********************************************************************************************
+     * Function to implement the functionality of the cancel button
+     **********************************************************************************************/
     fun cancelAdd(view: View) {
         val mainIntent = Intent(this, MainActivity::class.java)
         startActivity(mainIntent)
@@ -39,26 +43,26 @@ class AddActivity: AppCompatActivity() {
         finish()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    /***********************************************************************************************
+     * Function to read the form and create a timer using the information if it's valid
+     **********************************************************************************************/
     fun saveMed(view: View){
         readForm()
 
-        Log.d("Form Test: ", "${name} ${doseFreq} ${dosePeriod} ${doseSize}\n" +
-                "${doseTime} ${doseDate} ${refillRemaining} ${refillSize}\n" +
-                "${withFood} $doseUnit")
-
         if(validateMed(name, doseFreq, dosePeriod, doseSize, refillSize)) {
-            Log.d("Dir", "${this.filesDir}")
             TimerList.data.addTimer(makeTimer(), this)
-            setResult(1)
+            setResult(1)  // signal to the parent activity that the dataset has changed
             finish()
         } else {
-            Toast.makeText(this, "Invalid data entered please ensure all data is " +
-                    "entered correctly", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Invalid information entered please ensure all " +
+                    "information is entered correctly", Toast.LENGTH_SHORT).show()
         }
 
     }
 
+    /***********************************************************************************************
+     * Function to gather the data from the various input fields that make up the form
+     **********************************************************************************************/
     fun readForm(){
         var tempString = ""
 
@@ -102,7 +106,9 @@ class AddActivity: AppCompatActivity() {
         withFood = findViewById<Switch>(R.id.foodSwitch).isChecked
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    /***********************************************************************************************
+     * Function to use the gathered and validated data to generate a Timer object
+     **********************************************************************************************/
     fun makeTimer(): Timer {
         val newMed = Medication(name, refillSize, refillSize, refillRemaining, doseFreq,
                 dosePeriod, doseSize, withFood, doseUnit, true)
@@ -114,41 +120,15 @@ class AddActivity: AppCompatActivity() {
         return Timer(newMed, calendar.timeInMillis)
     }
 
+    /***********************************************************************************************
+     * Function to ensure that data needed to make a Timer object has been entered and is a valid
+     * value
+     **********************************************************************************************/
     fun validateMed(name: String, doseFreq: Int, dosePeriod: Int, doseSize: Double, refillSize: Double): Boolean {
         if(name.length == 0) {
             return false
         }
 
         return !( doseFreq <= 0 || dosePeriod <= 0 || doseSize <= 0 || refillSize <= 0)
-    }
-
-    override fun onStart() {
-        Log.d(TAG, "onStart called")
-        super.onStart()
-    }
-
-    override fun onResume() {
-        Log.d(TAG, "onResume called")
-        super.onResume()
-    }
-
-    override fun onRestart() {
-        Log.d(TAG, "onRestart called")
-        super.onRestart()
-    }
-
-    override fun onPause() {
-        Log.d(TAG, "onPause called")
-        super.onPause()
-    }
-
-    override fun onStop() {
-        Log.d(TAG, "onStop called")
-        super.onStop()
-    }
-
-    override fun onDestroy() {
-        Log.d(TAG, "onDestroy caled")
-        super.onDestroy()
     }
 }

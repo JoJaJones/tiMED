@@ -17,33 +17,38 @@ import com.lovelace_scd.timed.services.TimerList
 
 @RequiresApi(Build.VERSION_CODES.O)
 class MainActivity : AppCompatActivity() {
-
-    private val TAG = "ActivityLifeCycle(MA): "
+    private val TAG = "ActivityLifeCycle(MA): "  // TODO comment out or delete all lines that make use of this as they are logging lines
     private val timers = TimerList.data
     private lateinit var adapter: TimerAdaptor
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         timers.loadTimers(this)
+
+        // generate adaptor to handle the contents of the recycler view portion of the main activity
         adapter = TimerAdaptor(this, timers)
         val timerListView = findViewById<RecyclerView>(R.id.timerListView)
         timerListView.adapter = this.adapter
 
         timerListView.layoutManager = LinearLayoutManager(this)
-
     }
+
 
     fun addMed(view: View) {
         val addIntent = Intent(this, AddActivity::class.java)
         startActivityForResult(addIntent, 0)
     }
 
+    /**********************************************************************************************
+     * Function to allow receiving information from the child activity when it returns.
+     *********************************************************************************************/
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if(requestCode == 0) {
-            if(resultCode == 1) {
+            if(resultCode == 1) { // if user added a medication refresh timer list
                 adapter.notifyDataSetChanged()
             }
         }
