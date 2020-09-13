@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import java.lang.Exception
 import java.util.*
+import kotlin.math.ceil
 
 @RequiresApi(Build.VERSION_CODES.O)
 open class Medication(var name: String, var rxFullSize: Double, var amountRemaining: Double,
@@ -19,11 +20,29 @@ open class Medication(var name: String, var rxFullSize: Double, var amountRemain
         prevDoseTime()
     }
 
+    fun isRefillReady(): Boolean {
+        return amountRemaining <= ceil(rxFullSize / 4)
+    }
+
     fun refillMed(amount: Double){
-        if (!isRefillable){throw Exception("Medication is not refillable")}
-        if (numRefillsRemaining == 0){throw Exception("No refills remaining")}
-        numRefillsRemaining -= 1
-        amountRemaining += amount
+
+        if (isRefillReady()) {
+            if (isRefillable) {
+                if (numRefillsRemaining > 0) {
+                    numRefillsRemaining -= 1
+                    amountRemaining += amount
+                } else {
+                    throw Exception("out of refills")
+                }
+            } else {
+                throw Exception("not refillable")
+            }
+        } else {
+            throw Exception("not ready for refilling yet")
+        }
+
+
+
     }
 
     fun prevDoseTime(){

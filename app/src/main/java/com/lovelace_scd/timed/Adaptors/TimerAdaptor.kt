@@ -70,26 +70,25 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
          * the appropriate function to implement their intended behaviors
          ******************************************************************************************/
         override fun onClick(view: View){
+            var flag = true
             if (view == deleteMedBtn) {
                 removeTimer(adapterPosition)
                 countdown.cancel()
+                flag = false
             } else if (view == takeMedBtn){
                 countdown.cancel()
                 countdown = takeDose(countdown, timer, medTimerText)
                 countdown.start()
-                timers.updateTimers(context)
 
             } else if (view == skipDoseBtn){
                 countdown.cancel()
                 countdown = skipDose(countdown, timer, medTimerText)
                 countdown.start()
-                timers.updateTimers(context)
 
             } else if (view == delayDoseBtn){
                 countdown.cancel()
                 countdown = delayDose(countdown, timer, medTimerText)
                 countdown.start()
-                timers.updateTimers(context)
 
             } else if (view == refillBtn){
                 refillMed(timer, refillsRemaining)
@@ -105,6 +104,10 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
                         "${timer.medication.amountRemaining} ${timer.medication.doseUnit}s left. " +
                         "You need a refill in ${daysToRefillNeeded.toInt()} days",
                         Toast.LENGTH_SHORT).show()
+                flag = false
+            }
+            if(flag) {
+                timers.updateTimers(context)
             }
         }
     }
@@ -160,11 +163,12 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
      * remaining
      ******************************************************************************************/
     fun refillMed(timer: Timer, refillsRemaining: TextInputEditText?){
+        var numRefills = refillsRemaining?.text.toString().toInt()
         try{
-            timer.refillMed()
+            timer.refillMed(numRefills)
             refillsRemaining?.setText(timer.medication.numRefillsRemaining.toString())
         } catch (e: Exception) {
-            Toast.makeText(context, "You're out of ${timer.medication.name} refills.",
+            Toast.makeText(context, "${timer.medication.name} is ${e.message}",
                     Toast.LENGTH_SHORT).show()
         }
     }
