@@ -5,7 +5,6 @@ import android.app.NotificationManager
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -19,7 +18,6 @@ import com.lovelace_scd.timed.util.CHANNEL_ID
 
 @RequiresApi(Build.VERSION_CODES.O)
 class MainActivity : AppCompatActivity() {
-    private val TAG = "ActivityLifeCycle(MA): "  // TODO comment out or delete all lines that make use of this as they are logging lines
     private val timers = TimerList.data
     private lateinit var adapter: TimerAdaptor
 
@@ -68,36 +66,5 @@ class MainActivity : AppCompatActivity() {
                 adapter.notifyDataSetChanged()
             }
         }
-    }
-
-    override fun onStart() {
-        Log.d(TAG, "onStart called")
-        super.onStart()
-    }
-
-    override fun onResume() {
-        Log.d(TAG, "onResume called")
-        Log.d("File", "${TimerList.data.getTimers()?.size}")
-        super.onResume()
-    }
-
-    override fun onRestart() {
-        Log.d(TAG, "onRestart called")
-        super.onRestart()
-    }
-
-    override fun onPause() {
-        Log.d(TAG, "onPause called")
-        super.onPause()
-    }
-
-    override fun onStop() {
-        Log.d(TAG, "onStop called")
-        super.onStop()
-    }
-
-    override fun onDestroy() {
-        Log.d(TAG, "onDestroy caled")
-        super.onDestroy()
     }
 }
