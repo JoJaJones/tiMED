@@ -1,9 +1,8 @@
-package com.lovelace_scd.timed.Controller
+package com.lovelace_scd.timed.controller
 
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.annotation.RequiresApi

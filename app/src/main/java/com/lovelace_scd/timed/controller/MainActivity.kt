@@ -1,4 +1,4 @@
-package com.lovelace_scd.timed.Controller
+package com.lovelace_scd.timed.controller
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -11,7 +11,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.lovelace_scd.timed.Adaptors.TimerAdaptor
+import com.lovelace_scd.timed.adaptors.TimerAdaptor
 import com.lovelace_scd.timed.R
 import com.lovelace_scd.timed.services.TimerList
 import com.lovelace_scd.timed.util.CHANNEL_ID

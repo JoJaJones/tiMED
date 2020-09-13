@@ -1,7 +1,6 @@
 package com.lovelace_scd.timed.model
 
 import android.content.Context
-import android.content.Context.MODE_PRIVATE
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.lovelace_scd.timed.io.MedJsonReader
@@ -9,20 +8,16 @@ import java.io.File
 
 @RequiresApi(Build.VERSION_CODES.O)
 class TimerData {
-    var timerData : ArrayList<Timer>;
-    val fileName = "timers.json"
-    private val jsonReader = MedJsonReader();
+    var timerData : ArrayList<Timer>
+    private val fileName = "timers.json"
+    private val jsonReader = MedJsonReader()
 
-    constructor () {
+    init {
         timerData = ArrayList()
     }
 
     fun getTimers() : ArrayList<Timer> {
-        return timerData;
-    }
-
-    fun getTimer(position: Int): Timer? {
-        return timerData.get(position)
+        return timerData
     }
 
     fun loadTimers(context: Context){
@@ -30,28 +25,23 @@ class TimerData {
     }
 
     fun addTimer(timer: Timer, context: Context) {
-        timerData.add(timer);
-        jsonReader.write(timerData, File(context.filesDir, fileName));
+        timerData.add(timer)
+        jsonReader.write(timerData, File(context.filesDir, fileName))
     }
 
     fun updateTimers(context: Context) {
         jsonReader.write(timerData, File(context.filesDir, fileName))
     }
 
-    fun deleteTimer(timer : Timer, context: Context) {
-        timerData = timerData.filter() { it != timer } as ArrayList<Timer>;
-        jsonReader.write(timerData, File(context.filesDir, fileName));
-    }
-
     fun deleteTimer(position: Int, context: Context) {
         timerData.removeAt(position)
 
         if(timerData.size == 0) {
-            jsonReader.deleteFile(File(context.filesDir, fileName));
+            jsonReader.deleteFile(File(context.filesDir, fileName))
 
         }
          else {
-            jsonReader.write(timerData, File(context.filesDir, fileName));
+            jsonReader.write(timerData, File(context.filesDir, fileName))
         }
     }
 }

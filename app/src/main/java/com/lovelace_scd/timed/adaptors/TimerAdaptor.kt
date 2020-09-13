@@ -1,4 +1,4 @@
-package com.lovelace_scd.timed.Adaptors
+package com.lovelace_scd.timed.adaptors
 
 import android.content.Context
 import android.os.Build
@@ -13,9 +13,9 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
 import com.lovelace_scd.timed.R
-import com.lovelace_scd.timed.util.CHANNEL_ID
 import com.lovelace_scd.timed.model.Timer
 import com.lovelace_scd.timed.model.TimerData
+import com.lovelace_scd.timed.util.CHANNEL_ID
 import com.lovelace_scd.timed.util.DELAY_AMOUNT
 import com.lovelace_scd.timed.util.MS_PER_30_MIN
 import java.lang.Exception
