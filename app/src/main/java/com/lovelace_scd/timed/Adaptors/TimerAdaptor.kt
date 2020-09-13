@@ -71,18 +71,26 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
                 countdown.cancel()
                 countdown = takeDose(countdown, timer, medTimerText)
                 countdown.start()
+                timers.updateTimers(context)
             } else if (view == skipDoseBtn){
                 countdown.cancel()
                 countdown = skipDose(countdown, timer, medTimerText)
                 countdown.start()
+                timers.updateTimers(context)
             } else if (view == delayDoseBtn){
                 countdown.cancel()
                 countdown = delayDose(DELAY_AMOUNT, countdown, timer, medTimerText)
                 countdown.start()
+                timers.updateTimers(context)
             } else if (view == refillBtn){
                 refillMed(timer, refillsRemaining)
             } else {
-                Toast.makeText(context, "You clicked on ${timer.medication.name}", Toast.LENGTH_SHORT).show()
+                var daysToRefillNeeded: Double = timer.medication.amountRemaining / timer.medication.doseSize
+                daysToRefillNeeded *= timer.medication.dosesPerTimePeriod/timer.medication.daysPerTimePeriod
+                Toast.makeText(context, "${timer.medication.name}: you have " +
+                        "${timer.medication.amountRemaining} ${timer.medication.doseUnit}s left. " +
+                        "You need a refill in ${daysToRefillNeeded.toInt()} days",
+                        Toast.LENGTH_SHORT).show()
             }
         }
     }

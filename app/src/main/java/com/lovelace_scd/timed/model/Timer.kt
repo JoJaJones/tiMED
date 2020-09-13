@@ -63,7 +63,7 @@ class Timer {
         var timerAdjustment = (now - nextDoseDue) % millisecondsPerDay;
 
 
-        nextDoseDue = (medication.dosesPerTimePeriod / medication.daysPerTimePeriod * millisecondsPerDay).toLong() - timerAdjustment;
+        nextDoseDue = ((medication.daysPerTimePeriod.toDouble() / medication.dosesPerTimePeriod.toDouble() ) * millisecondsPerDay).toLong() - timerAdjustment;
         nextDoseDueAdjusted = 0;
 
         countingTimer = CountingTimer(this, nextDoseDue);
@@ -89,11 +89,10 @@ class Timer {
 
         if(calculateTimeRemaining() < millisecondsPerHour/4 && medication.amountRemaining > 0){
             nextDoseReady = true
+            medication.takeMed();
+            calculateNextDoseTime()
         } else {
             nextDoseReady = false
-        }
-
-        if (!nextDoseReady) {
             var errorMsg = ""
             if (medication.amountRemaining > 0) {
                 errorMsg = "It's too far from your scheduled time, please wait longer."
@@ -102,11 +101,8 @@ class Timer {
                         "before trying to take more"
             }
             throw Exception(errorMsg)
-        };
-        nextDoseReady = false;
-        medication.takeMed();
+        }
 
-        calculateNextDoseTime()
     }
 
     fun calculateNextDoseTime(){

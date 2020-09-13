@@ -2,6 +2,7 @@ package com.lovelace_scd.timed.model
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import java.lang.Exception
 import java.util.*
 
 open class Medication(var name: String, var rxFullSize: Double, var amountRemaining: Double,
@@ -25,14 +26,14 @@ open class Medication(var name: String, var rxFullSize: Double, var amountRemain
 //    }
 
     fun takeMed(){
-        if (amountRemaining == 0.0){ throw error("No medication remaining")}
+        if (amountRemaining == 0.0){ throw Exception("No medication remaining")}
         amountRemaining -= doseSize
         prevDoseTime()
     }
 
     fun refillMed(amount: Double){
-        if (!isRefillable){throw error("Medication is not refillable")}
-        if (numRefillsRemaining == 0){throw error("No refills remaining")}
+        if (!isRefillable){throw Exception("Medication is not refillable")}
+        if (numRefillsRemaining == 0){throw Exception("No refills remaining")}
         numRefillsRemaining - 1
         amountRemaining += amount
     }

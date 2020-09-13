@@ -34,6 +34,10 @@ class TimerData {
         jsonReader.write(timerData, File(context.filesDir, fileName));
     }
 
+    fun updateTimers(context: Context) {
+        jsonReader.write(timerData, File(context.filesDir, fileName))
+    }
+
     fun deleteTimer(timer : Timer, context: Context) {
         timerData = timerData.filter() { it != timer } as ArrayList<Timer>;
         jsonReader.write(timerData, File(context.filesDir, fileName));
