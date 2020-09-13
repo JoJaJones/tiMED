@@ -16,7 +16,11 @@ import com.lovelace_scd.timed.model.TestTimer
 import com.lovelace_scd.timed.model.Timer
 import com.lovelace_scd.timed.model.TimerData
 import com.lovelace_scd.timed.test_code.Test
+import java.lang.Exception
+import java.util.*
 import java.util.concurrent.CountDownLatch
+
+const val DELAY_AMOUNT = 10 * 60 //10 min snooze
 
 @RequiresApi(Build.VERSION_CODES.O)
 class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.Adapter<TimerAdaptor.Holder>() {
@@ -35,6 +39,7 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
 
     inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener{
         lateinit var timer: Timer
+        lateinit var countdown: CountDownTimer
         val medName: TextView? = itemView.findViewById(R.id.medName)
         var deleteMedBtn: ImageButton? = itemView.findViewById(R.id.delButton)
         var takeMedBtn: ImageButton? = itemView.findViewById(R.id.takeBtn)
@@ -48,6 +53,7 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
         fun bindTimer(timer: Timer, context: Context){
             this.timer = timer
             itemView.setOnClickListener(this)
+            countdown = DisplayCountdown(medTimerText, timer.calculateTimeRemaining(), 1000L).start()
             medName?.text = timer.medication.name
             deleteMedBtn?.setOnClickListener(this)
             takeMedBtn?.setOnClickListener(this)
@@ -55,20 +61,26 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
             delayDoseBtn?.setOnClickListener(this)
             refillBtn?.setOnClickListener(this)
             refillsRemaining?.setText(timer.medication.numRefillsRemaining.toString())
-            DisplayCountdown(medTimerText, timer.calculateTimeRemaining(), 1000L).start()
+
         }
 
         override fun onClick(view: View){
             if (view == deleteMedBtn) {
                 removeTimer(adapterPosition)
             } else if (view == takeMedBtn){
-                takeDose(adapterPosition)
+                countdown.cancel()
+                countdown = takeDose(countdown, timer, medTimerText)
+                countdown.start()
             } else if (view == skipDoseBtn){
-                skipDose(adapterPosition)
+                countdown.cancel()
+                countdown = skipDose(countdown, timer, medTimerText)
+                countdown.start()
             } else if (view == delayDoseBtn){
-                delayDose(adapterPosition)
+                countdown.cancel()
+                countdown = delayDose(DELAY_AMOUNT, countdown, timer, medTimerText)
+                countdown.start()
             } else if (view == refillBtn){
-                refillMed(adapterPosition)
+                refillMed(timer, refillsRemaining)
             } else {
                 Toast.makeText(context, "You clicked on ${timer.medication.name}", Toast.LENGTH_SHORT).show()
             }
@@ -81,24 +93,38 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
         notifyItemRangeChanged(position, timers.timerData.size)
     }
 
-    fun takeDose(position: Int){
-//        Log.d("Med Btn Test: ", "take ${timers[position].name}")
-//        timers[position].makeTaken()
+    fun takeDose(countdown: CountDownTimer, timer: Timer, view: TextView?)
+            : CountDownTimer{
+        try {
+            timer.markTaken()
+        } catch (e: Exception) {
+
+            Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
+        }
+        return DisplayCountdown(view, timer.calculateTimeRemaining(), 1000L)
     }
 
-    fun delayDose(position: Int){
-//        Log.d("Med Btn Test: ", "delay ${timers[position].name}")
-//        timers[position].adjustNextDoseTime()
+    fun delayDose(delayAmount: Int, countdown: CountDownTimer, timer: Timer, view: TextView?)
+            : CountDownTimer{
+
+        timer.adjustNextDoseTime(delayAmount*1000L)
+        return DisplayCountdown(view, timer.calculateTimeRemaining(), 1000L)
     }
 
-    fun skipDose(position: Int){
-//        Log.d("Med Btn Test: ", "skip ${timers[position].name}")
-//        timers[position].skipDose()
+    fun skipDose(countdown: CountDownTimer, timer: Timer, view: TextView?)
+            : CountDownTimer{
+        timer.skipNextDose()
+        return DisplayCountdown(view, timer.calculateTimeRemaining(), 1000L)
     }
 
-    fun refillMed(position: Int){
-//        Log.d("Med Btn Test: ", "refill ${timers[position].name}")
-//        timers[position].refillMed()
+    fun refillMed(timer: Timer, refillsRemaining: TextInputEditText?){
+        try{
+            timer.refillMed()
+            refillsRemaining?.setText(timer.medication.numRefillsRemaining.toString())
+        } catch (e: Exception) {
+            Toast.makeText(context, "You're out of ${timer.medication.name} refills.",
+                    Toast.LENGTH_SHORT).show()
+        }
     }
 }
 

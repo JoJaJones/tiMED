@@ -9,12 +9,13 @@ package com.lovelace_scd.timed.model
 import android.os.Build
 import android.os.CountDownTimer
 import androidx.annotation.RequiresApi
-import com.lovelace_scd.timed.model.Medication
+import java.lang.Exception
 //import com.lovelace_scd.timed.model.Medication
 import java.util.*
 
 
 const val millisecondsPerDay = 24 * 60 * 60 * 1000;
+const val millisecondsPerHour = 60 * 60 * 1000;
 const val millisecondsPerMinute = 60 * 1000;
 const val millisecondsPerSecond = 1000;
 
@@ -22,52 +23,54 @@ const val millisecondsPerSecond = 1000;
 class Timer {
 
     lateinit var countingTimer : CountDownTimer;
-    var millisecondsToNextDose: Long = 0;
+    var nextDoseDue: Long = 0;
     var medication: Medication;
-    var baseDate : Long;
 
     // Keep millisecondsNextDoseAdjusted separate from millisecondsToNextDose to allow
     //  user option to continue to adjust all future dose times. For example, if user selects from
     //  UI "Delay next dose 2 hours", when user eventually marks dose as taken, we can easily allow
     //  user to schedule all next doses for 2 hours later.
-    var millisecondsNextDoseAdjusted: Long = 0;
+    var nextDoseDueAdjusted: Long = 0;
     var skipNextDose: Boolean;
     var nextDoseReady: Boolean;
 
-    constructor(medication: Medication, date: Date, skipNextDose: Boolean = false, nextDoseReady: Boolean = false) {
+    constructor(medication: Medication, date: Date, skipNextDose: Boolean = false, nextDoseReady: Boolean = true) {
 
         this.medication = medication;
 //        this.baseDate = date;
         this.skipNextDose = skipNextDose;
         this.nextDoseReady = nextDoseReady;
-        this.baseDate = date.toInstant().toEpochMilli();
-        startTimer();
+        this.nextDoseDue = date.toInstant().toEpochMilli();
+        this.nextDoseDueAdjusted = this.nextDoseDue
+
+//        startTimer();
     }
 
-    constructor(medication: Medication, baseDate: Long, skipNextDose: Boolean = false, nextDoseReady: Boolean = false) {
+    constructor(medication: Medication, doseDueTime: Long, skipNextDose: Boolean = false, nextDoseReady: Boolean = true) {
 
         this.medication = medication;
 //        this.baseDate = date;
         this.skipNextDose = skipNextDose;
         this.nextDoseReady = nextDoseReady;
-        this.baseDate = baseDate;
-        startTimer();
+        this.nextDoseDue = doseDueTime;
+        this.nextDoseDueAdjusted = this.nextDoseDue
+//        startTimer();
     }
 
     fun startTimer() {
 
         var now = Date().toInstant().toEpochMilli();
-        var timerAdjustment = (now - baseDate) % millisecondsPerDay;
+        var timerAdjustment = (now - nextDoseDue) % millisecondsPerDay;
 
 
-        millisecondsToNextDose = (medication.dosesPerTimePeriod / medication.daysPerTimePeriod * millisecondsPerDay).toLong() - timerAdjustment;
-        millisecondsNextDoseAdjusted = 0;
+        nextDoseDue = (medication.dosesPerTimePeriod / medication.daysPerTimePeriod * millisecondsPerDay).toLong() - timerAdjustment;
+        nextDoseDueAdjusted = 0;
 
-        countingTimer = CountingTimer(this, millisecondsToNextDose);
+        countingTimer = CountingTimer(this, nextDoseDue);
     }
 
     fun calculateTimeRemaining(): Long {
-        return baseDate - Date().toInstant().toEpochMilli()
+        return nextDoseDueAdjusted - Date().toInstant().toEpochMilli()
     }
 
     fun restartTimer() {
@@ -75,23 +78,50 @@ class Timer {
     }
 
     fun getSecondsToNextDose(): Long {
-        return millisecondsToNextDose / millisecondsPerSecond;
+        return nextDoseDue / millisecondsPerSecond;
     }
 
     fun skipNextDose() {
-        skipNextDose = true;
+        calculateNextDoseTime()
     }
 
     fun markTaken() {
-        if (!nextDoseReady) throw Error("Next dose not ready.");
+
+        if(calculateTimeRemaining() < millisecondsPerHour/4 && medication.amountRemaining > 0){
+            nextDoseReady = true
+        } else {
+            nextDoseReady = false
+        }
+
+        if (!nextDoseReady) {
+            var errorMsg = ""
+            if (medication.amountRemaining > 0) {
+                errorMsg = "It's too far from your scheduled time, please wait longer."
+            } else {
+                errorMsg = "You're out of ${medication.name} refill it " +
+                        "before trying to take more"
+            }
+            throw Exception(errorMsg)
+        };
         nextDoseReady = false;
         medication.takeMed();
+
+        calculateNextDoseTime()
+    }
+
+    fun calculateNextDoseTime(){
+        this.nextDoseDue += (medication.dosesPerTimePeriod / medication.daysPerTimePeriod * millisecondsPerDay).toLong()
+        this.nextDoseDueAdjusted = nextDoseDue
     }
 
     fun adjustNextDoseTime(addTime: Long) {
-        millisecondsNextDoseAdjusted += addTime;
-
+        if(calculateTimeRemaining() < 0){
+            nextDoseDueAdjusted = Date().toInstant().toEpochMilli() + addTime
+        } else {
+            nextDoseDueAdjusted += addTime
+        }
     }
+
 
     fun notification() {
         print("Med timer: ${medication.name} ready...");
@@ -99,15 +129,19 @@ class Timer {
 
     fun toMap(): Map<String, Any> {
         var map = medication.toMap();
-        map["baseDate"] = baseDate;
+        map["baseDate"] = nextDoseDue;
         map["skipNextDose"] = skipNextDose;
         map["nextDoseReady"] = nextDoseReady;
-        map["millisecondsToNextDose"] = millisecondsToNextDose;
-        map["millisecondsNextDoseAdjusted"] = millisecondsNextDoseAdjusted;
+        map["millisecondsToNextDose"] = nextDoseDue;
+        map["millisecondsNextDoseAdjusted"] = nextDoseDueAdjusted;
 
         return map;
     }
-    
+
+    fun refillMed(){
+        medication.refillMed(medication.rxFullSize)
+    }
+
 }
 
 class CountingTimer : CountDownTimer{
@@ -120,7 +154,7 @@ class CountingTimer : CountDownTimer{
     }
 
     override fun onTick(p0: Long) {
-        timer.millisecondsToNextDose = p0;
+        timer.nextDoseDue = p0;
     }
 
     override fun onFinish() {
