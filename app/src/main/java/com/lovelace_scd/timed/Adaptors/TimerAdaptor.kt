@@ -67,6 +67,7 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
         override fun onClick(view: View){
             if (view == deleteMedBtn) {
                 removeTimer(adapterPosition)
+                countdown.cancel()
             } else if (view == takeMedBtn){
                 countdown.cancel()
                 countdown = takeDose(countdown, timer, medTimerText)

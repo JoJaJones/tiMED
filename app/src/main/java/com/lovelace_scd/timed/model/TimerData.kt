@@ -46,6 +46,13 @@ class TimerData {
 
     fun deleteTimer(position: Int, context: Context) {
         timerData.removeAt(position)
-        jsonReader.write(timerData, File(context.filesDir, fileName));
+
+        if(timerData.size == 0) {
+            jsonReader.deleteFile(File(context.filesDir, fileName));
+
+        }
+         else {
+            jsonReader.write(timerData, File(context.filesDir, fileName));
+        }
     }
 }

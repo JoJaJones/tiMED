@@ -47,6 +47,10 @@ class MedJsonReader(val filename: String = "src/main/java/com/lovelace_scd/timed
 //        return medJsonToTimers(res!!["timers"]);
     }
 
+    fun deleteFile(file: File) {
+        file.delete()
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun medTimersToJson(timers: ArrayList<Timer>?): JsonArray<JsonObject> {
         val jsonArr = JsonArray<JsonObject>();
