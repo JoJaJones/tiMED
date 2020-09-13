@@ -5,25 +5,13 @@ import androidx.annotation.RequiresApi
 import java.lang.Exception
 import java.util.*
 
+@RequiresApi(Build.VERSION_CODES.O)
 open class Medication(var name: String, var rxFullSize: Double, var amountRemaining: Double,
                       var numRefillsRemaining: Int, var dosesPerTimePeriod: Int, var daysPerTimePeriod: Int,
                       var doseSize: Double, var takeWithFood: Boolean, var doseUnit: String, var isRefillable: Boolean = true) {
 
-    @RequiresApi(Build.VERSION_CODES.O)
-//    val timerData: TimerData = TimerData()
-    var calendar = Calendar.getInstance()
 
-//    fun addTimer(timer: Timer){
-//        timerData.addTimer(timer)
-//    }
-//
-//    fun deleteTimer(timer: Timer){
-//        timerData.deleteTimer(timer)
-//    }
-//
-//    fun getTimers(){
-//        timerData.getTimers()
-//    }
+    var calendar = Calendar.getInstance()
 
     fun takeMed(){
         if (amountRemaining == 0.0){ throw Exception("No medication remaining")}
@@ -34,21 +22,12 @@ open class Medication(var name: String, var rxFullSize: Double, var amountRemain
     fun refillMed(amount: Double){
         if (!isRefillable){throw Exception("Medication is not refillable")}
         if (numRefillsRemaining == 0){throw Exception("No refills remaining")}
-        numRefillsRemaining - 1
+        numRefillsRemaining -= 1
         amountRemaining += amount
     }
 
     fun prevDoseTime(){
         calendar = Calendar.getInstance()
-    }
-
-    fun minutesBtwnDose(): Int {
-        return ((daysPerTimePeriod * 24) / dosesPerTimePeriod) * 60
-    }
-
-    fun calcNextDostTime(): Date? {
-        calendar.add(Calendar.MINUTE, minutesBtwnDose())
-        return calendar.time
     }
 
     fun toMap() : MutableMap<String, Any> {
