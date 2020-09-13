@@ -109,7 +109,6 @@ class Timer {
         this.nextDoseDue += ((medication.daysPerTimePeriod.toDouble() /
                             medication.dosesPerTimePeriod.toDouble() ) *
                             millisecondsPerDay).toLong()
-        
         if(this.nextDoseDue < Date().toInstant().toEpochMilli()) {
             this.nextDoseDue = Date().toInstant().toEpochMilli() +
                                ((medication.daysPerTimePeriod.toDouble() /
