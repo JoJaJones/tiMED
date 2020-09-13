@@ -1,9 +1,8 @@
 package com.lovelace_scd.timed.Controller
 
-import android.R.attr
+
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -16,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lovelace_scd.timed.Adaptors.TimerAdaptor
 import com.lovelace_scd.timed.R
+import com.lovelace_scd.timed.Util.CHANNEL_ID
 import com.lovelace_scd.timed.services.TimerList
 
 
@@ -39,24 +39,22 @@ class MainActivity : AppCompatActivity() {
         timerListView.adapter = this.adapter
 
         timerListView.layoutManager = LinearLayoutManager(this)
-        createNotificationManager()
+
+        createNotificationChannel()
     }
 
-    private fun createNotificationManager() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "Med notifications"
-            val descriptionText = "General medication reminders"
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel("something about a channel", name, importance).apply {
-                description = descriptionText
-            }
-            // Register the channel with the system
-            val notificationManager: NotificationManager =
-                    getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
+    private fun createNotificationChannel() {
+        val name = getString(R.string.channel_name)
+        val descriptionText = getString(R.string.channel_description)
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+            description = descriptionText
         }
+        // Register the channel with the system
+        val notificationManager: NotificationManager =
+                getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
+
     }
 
     fun addMed(view: View) {

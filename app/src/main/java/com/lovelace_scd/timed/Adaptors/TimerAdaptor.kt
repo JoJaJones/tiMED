@@ -20,6 +20,7 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
 import com.lovelace_scd.timed.R
+import com.lovelace_scd.timed.Util.CHANNEL_ID
 import com.lovelace_scd.timed.model.Medication
 import com.lovelace_scd.timed.model.Timer
 import com.lovelace_scd.timed.model.TimerData
@@ -75,27 +76,27 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
          * Override for the onClick method to direct the various UI elements that are clickable to
          * the appropriate function to implement their intended behaviors
          ******************************************************************************************/
-        override fun onClick(view: View) {
+
+        override fun onClick(view: View){
+            var flag = true
             if (view == deleteMedBtn) {
                 removeTimer(adapterPosition)
                 countdown.cancel()
-            } else if (view == takeMedBtn) {
+                flag = false
+            } else if (view == takeMedBtn){
                 countdown.cancel()
                 countdown = takeDose(countdown, timer, medTimerText)
                 countdown.start()
-                timers.updateTimers(context)
 
             } else if (view == skipDoseBtn) {
                 countdown.cancel()
                 countdown = skipDose(countdown, timer, medTimerText)
                 countdown.start()
-                timers.updateTimers(context)
 
             } else if (view == delayDoseBtn) {
                 countdown.cancel()
                 countdown = delayDose(countdown, timer, medTimerText)
                 countdown.start()
-                timers.updateTimers(context)
 
             } else if (view == refillBtn) {
                 refillMed(timer, refillsRemaining)
@@ -107,10 +108,15 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
                         timer.medication.daysPerTimePeriod.toDouble() /
                         timer.medication.dosesPerTimePeriod.toDouble()
 
+                val toastDoseUnit = if (timer.medication.doseUnit == "N/A") "" else timer.medication.doseUnit + "s "
                 Toast.makeText(context, "${timer.medication.name}: you have " +
-                        "${timer.medication.amountRemaining} ${timer.medication.doseUnit}s left. " +
+                        "${timer.medication.amountRemaining} ${toastDoseUnit}left. " +
                         "You need a refill in ${daysToRefillNeeded.toInt()} days",
                         Toast.LENGTH_SHORT).show()
+                flag = false
+            }
+            if(flag) {
+                timers.updateTimers(context)
             }
         }
     }
@@ -165,12 +171,14 @@ class TimerAdaptor(val context: Context, val timers: TimerData) : RecyclerView.A
      * data and UI to reflect the increased quantity of medication and reduced number of refills
      * remaining
      ******************************************************************************************/
-    fun refillMed(timer: Timer, refillsRemaining: TextInputEditText?) {
-        try {
-            timer.refillMed()
+
+    fun refillMed(timer: Timer, refillsRemaining: TextInputEditText?){
+        var numRefills = refillsRemaining?.text.toString().toInt()
+        try{
+            timer.refillMed(numRefills)
             refillsRemaining?.setText(timer.medication.numRefillsRemaining.toString())
         } catch (e: Exception) {
-            Toast.makeText(context, "You're out of ${timer.medication.name} refills.",
+            Toast.makeText(context, "${timer.medication.name} is ${e.message}",
                     Toast.LENGTH_SHORT).show()
         }
     }
@@ -219,7 +227,7 @@ class DisplayCountdown(val view: TextView?, time: Long, msPerSec: Long, val cont
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onFinish() {
         view?.text = "Now!"
-        var builder = NotificationCompat.Builder(context, "something about a channel")
+        var builder = NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.pill_clipart)
                 .setContentTitle("Medication Reminder")
                 .setContentText("It's time to take ${medication.name}")

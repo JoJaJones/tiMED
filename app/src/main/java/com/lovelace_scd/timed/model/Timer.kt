@@ -86,18 +86,18 @@ class Timer {
     }
 
     fun markTaken() {
-
         if(calculateTimeRemaining() < millisecondsPerHour/4 && medication.amountRemaining > 0){
             nextDoseReady = true
             medication.takeMed();
             calculateNextDoseTime()
+
         } else {
             nextDoseReady = false
             var errorMsg = ""
             if (medication.amountRemaining > 0) {
                 errorMsg = "It's too far from your scheduled time, please wait longer."
             } else {
-                errorMsg = "You're out of ${medication.name} refill it " +
+                errorMsg = "You're out of ${medication.name}, refill it " +
                         "before trying to take more"
             }
             throw Exception(errorMsg)
@@ -106,7 +106,15 @@ class Timer {
     }
 
     fun calculateNextDoseTime(){
-        this.nextDoseDue += ((medication.daysPerTimePeriod.toDouble() / medication.dosesPerTimePeriod.toDouble() ) * millisecondsPerDay).toLong()
+        this.nextDoseDue += ((medication.daysPerTimePeriod.toDouble() /
+                            medication.dosesPerTimePeriod.toDouble() ) *
+                            millisecondsPerDay).toLong()
+        if(this.nextDoseDue < Date().toInstant().toEpochMilli()) {
+            this.nextDoseDue = Date().toInstant().toEpochMilli() +
+                               ((medication.daysPerTimePeriod.toDouble() /
+                               medication.dosesPerTimePeriod.toDouble() ) *
+                               millisecondsPerDay).toLong()
+        }
         this.nextDoseDueAdjusted = nextDoseDue
     }
 
@@ -134,8 +142,13 @@ class Timer {
         return map;
     }
 
-    fun refillMed(){
-        medication.refillMed(medication.rxFullSize)
+    fun refillMed(remainingRefills: Int){
+        if(remainingRefills != medication.numRefillsRemaining
+                && medication.isRefillable){
+            medication.numRefillsRemaining = remainingRefills
+        } else if (medication.isRefillable){
+            medication.refillMed(medication.rxFullSize)
+        }
     }
 
 }
